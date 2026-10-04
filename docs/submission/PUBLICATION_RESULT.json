@@ -4,7 +4,7 @@
   "license": "MIT",
   "copyright": "Copyright (c) 2026 CardioScope contributors",
   "repository_url": "https://github.com/AbhikRao/CardioScope",
-  "repository_visibility": "public; anonymous access verification pending",
+  "repository_visibility": "public; anonymous GitHub HTML/API HTTP 200; private=false",
   "initial_public_commit": "53cf72021e04330eabbdbb02d071ae87f18e2555",
   "public_tag": {
     "name": "v1.0.0",
@@ -37,7 +37,9 @@
     "frontend_tests": 75,
     "documentation_links_before_status_updates": 184,
     "privacy_secret_path_scan": "PASS; two nonprotected documentary transcript paths redacted only in public copies",
-    "docker": "not run; Docker daemon unavailable"
+    "docker": "not run; Docker daemon unavailable",
+    "final_local_markdown_links": 186,
+    "final_local_markdown_missing": []
   },
   "report": {
     "path": "output/pdf/CardioScope-Track-A-Report.pdf",
@@ -68,5 +70,12 @@
     "Record/upload YouTube demo; add actual URL",
     "Complete Devpost and both teammate identities; submit after final checks",
     "Confirm official deadline and logged-out final links"
-  ]
+  ],
+  "anonymous_access": {
+    "authenticated_headers_or_cookies": false,
+    "api_http_status": 200,
+    "html_http_status": 200,
+    "repository_private": false,
+    "code_available": false
+  }
 }

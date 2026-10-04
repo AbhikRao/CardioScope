@@ -58,7 +58,7 @@ Python; scikit-learn; NumPy; pandas; SHAP; FastAPI; uvicorn; React; TypeScript; 
 
 ## Submission links and gallery
 
-- Public GitHub repository: **pending publication approval and license/PDF resolution**.
+- Public GitHub repository: [AbhikRao/CardioScope](https://github.com/AbhikRao/CardioScope) — public repository created; initial code push blocked by missing OAuth `workflow` scope. Do not submit this as a working source link until the push and clone/CI checks succeed.
 - YouTube demo: **pending recording and upload approval**; 3-10 minutes, English audio/subtitles, public or unlisted.
 - Report: `output/pdf/CardioScope-Track-A-Report.pdf` (six pages).
 - Gallery order: `product-hero.png`, `anatomy.png`, `explanation-CAD.png`, `explanation-RCA.png`, `evidence.png` from `docs/submission/assets/`.

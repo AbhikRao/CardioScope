@@ -58,3 +58,7 @@ MIT selection and the separate-export route are owner-approved. Video recording/
 ## Public-export provenance
 
 [PUBLIC_EXPORT.json](PUBLIC_EXPORT.json) records exclusions, the approved working-tree source, and documentation-only adaptations. Two intentional historical console transcripts had a personal checkout path replaced by `<ARCHIVAL_ROOT>` in this copy only, with before/after hashes recorded. Scientific result files, all 256 protected V1 files, model outputs, SHAP and anatomy remain unchanged. No environments, dependency folders, caches or local Git history are published.
+
+## Current GitHub publication status
+
+[AbhikRao/CardioScope](https://github.com/AbhikRao/CardioScope) was created as a public repository. GitHub rejected the initial `main` push because the current OAuth token lacks `workflow` scope. No code/tag is pushed yet, and Actions has no run. [PUBLICATION_RESULT.json](PUBLICATION_RESULT.json) records safe verification, exact local commit/tag, the permission blocker and resume commands. No credential workaround, workflow removal, force-push or history rewrite was attempted.

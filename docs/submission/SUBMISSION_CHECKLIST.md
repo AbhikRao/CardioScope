@@ -5,14 +5,15 @@ Prepared package only. Nothing has been published or submitted. Items checked be
 ## Release decisions and public source
 
 - [x] Owner selected MIT; root LICENSE uses Copyright (c) 2026 CardioScope contributors. Third-party licenses remain separate.
-- [ ] Resolve organizer PDF redistribution in **history**, or approve a separate clean public snapshot omitting them. Preserve the local frozen archive; no destructive rewrite without explicit approval.
-- [ ] Approve GitHub publication; create a **public** repository and push only the reviewed export.
+- [x] Separate fresh-history public export omits all seven organizer PDFs; original archive/history preserved.
+- [x] Owner authorized publication; created **public** [AbhikRao/CardioScope](https://github.com/AbhikRao/CardioScope).
+- [ ] Push reviewed export: blocked because current OAuth token lacks `workflow` scope. Reauthorize using the recorded resume commands; retain the CI workflow.
 - [ ] Verify visibility logged-out/incognito, clone the public repository into a clean directory, and follow README setup.
 - [x] Judge landing README prepared with setup, honest all-target V1 metrics, anatomy/explanation limits and research boundary.
 - [x] Existing trained V1 weights, schema/split/search, SHAP background/config/lock and 83 anatomy leaves retained.
 - [x] Reproducibility and Docker instructions prepared; historical macOS/Ubuntu validation is linked.
 - [ ] Run/check hosted GitHub Actions after publication. Until then: "workflow prepared and validated through equivalent local Ubuntu checks."
-- [ ] Replace pending GitHub URL in README/Devpost with the actual accessible URL.
+- [x] README/Devpost contain the real GitHub URL and its current push-blocked status.
 
 ## Report, demo and Devpost
 

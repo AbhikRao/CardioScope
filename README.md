@@ -105,7 +105,7 @@ docker run --rm --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-pr
 
 The hardened V1 passed **134 Python tests and 75 frontend tests** on macOS ARM64 and clean Ubuntu ARM64, with locked runtime checks, frozen-output/SHAP reconstruction, browser checks and **256 protected-file hashes**. Initial uncompressed JS decreased by about **78%** through lazy loading; total viewer assets were not similarly reduced. Desktop Chromium, Firefox and Safari workflows were verified; no physical-device or Linux graphical-browser certification is claimed.
 
-**GitHub Actions workflow prepared and locally verified. Hosted CI is awaiting its first public run.** [Hardening evidence](docs/HARDENING.md), [CI configuration](.github/workflows/ci.yml), [submission claim audit](docs/submission/CLAIM_AUDIT.md).
+**GitHub Actions workflow prepared and locally verified. Hosted CI has not run: GitHub rejected the initial push because the current OAuth token lacks `workflow` scope.** [Hardening evidence](docs/HARDENING.md), [CI configuration](.github/workflows/ci.yml), [submission claim audit](docs/submission/CLAIM_AUDIT.md).
 
 Safe documentation-phase checks:
 
@@ -144,3 +144,5 @@ Dataset: [UCI Extension of Z-Alizadeh Sani, DOI 10.24432/C5461K](https://doi.org
 - [Five-minute demo storyboard](docs/submission/DEMO_SCRIPT.md) and [deterministic rehearsal checklist](docs/submission/DEMO_REHEARSAL.md).
 - [Devpost-ready copy](docs/submission/DEVPOST.md), [judge Q&A](docs/submission/JUDGE_QA.md), [submission checklist](docs/submission/SUBMISSION_CHECKLIST.md).
 - YouTube demo and Devpost URLs: **not yet provided**. The user will record/upload the demo and complete Devpost separately; no video or submission link is invented.
+
+Public GitHub repository: [AbhikRao/CardioScope](https://github.com/AbhikRao/CardioScope). The repository is public but its initial code push is blocked by missing OAuth `workflow` scope. See [publication status and resume commands](docs/submission/PUBLICATION_RESULT.json).

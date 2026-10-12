@@ -1,6 +1,6 @@
 # Deterministic demo rehearsal
 
-This rehearsal uses only the existing public development example and one labeled hypothetical edit of it. Training, evaluation, threshold changes and scientific changes are not part of rehearsal. The [storyboard](DEMO_SCRIPT.md) targets about 4:50; the recorded video must stay within 3–10 minutes.
+This rehearsal uses only the existing public development example and one labeled hypothetical edit of it. Training, evaluation, threshold changes and scientific changes are not part of rehearsal. The [storyboard](DEMO_SCRIPT.md) targets about 4:30 (narration ≈ 3:00–3:20 at a normal pace), leaving buffer under five minutes; the recorded video must stay within 3–10 minutes.
 
 ## Environment and pre-roll
 

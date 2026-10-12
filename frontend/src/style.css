@@ -2,7 +2,7 @@
 :root {
   font-family: Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
   color: #263b3e; background: #f3f5f5; line-height: 1.55;
-  --ink: #10292d; --muted: #586a6d; --soft: #7b8b8d; --line: #dfe6e5; --line-strong: #c9d5d3;
+  --ink: #10292d; --muted: #586a6d; --soft: #5f7073; --line: #dfe6e5; --line-strong: #c9d5d3;
   --surface: #fff; --tint: #f6f8f8; --teal: #0f6560; --teal-soft: #e5f1ee;
   --up: #c0622b; --down: #2b7a96; --gold: #b8860b; --warn-bg: #fbf4e6; --warn-line: #e3c48a; --warn-ink: #6f5426;
   --radius: 14px; --shadow: 0 1px 2px #10292d0a, 0 6px 18px -12px #10292d26;

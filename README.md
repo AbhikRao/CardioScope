@@ -17,7 +17,7 @@ Models were frozen before the holdout was evaluated once. CAD/LAD performed bett
 
 *Real production-build capture of the public development example. Clicking an artery selects its card and explanation; whole-vessel colors encode model-estimated probability (gold = 0.5 threshold), not lesion locations or measured narrowing.*
 
-### One input changed, the whole system updates
+### Two hypothetical input changes, the whole system updates
 
 | Public development example | Hypothetical edit: `Typical Chest Pain` 0→1, `Atypical` Y→N |
 |---|---|
@@ -116,7 +116,7 @@ docker run --rm --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-pr
 
 ## Reproducibility, testing and CI
 
-**Hosted GitHub Actions passed** on GitHub's `ubuntu-24.04` runners on 4 October 2026 for the published `main` commit ([run 37225107078](https://github.com/AbhikRao/CardioScope/actions/runs/37225107078)) and the `v1.0.0` tag ([run 37225107079](https://github.com/AbhikRao/CardioScope/actions/runs/37225107079)). Both runs passed **134 Python tests and 75 frontend tests**, lint/type/build checks, the frozen-model and SHAP smoke test, and confirmed that all **256 protected files** are byte-identical. Earlier, the same suites passed on macOS ARM64 and clean Ubuntu ARM64. Initial uncompressed JS dropped by about **78%** through lazy loading. Desktop Chromium, Firefox and Safari workflows were verified; no physical-device certification is claimed. [Hardening evidence](docs/HARDENING.md), [CI configuration](.github/workflows/ci.yml), [submission claim audit](docs/submission/CLAIM_AUDIT.md).
+**Hosted GitHub Actions passed** on GitHub's `ubuntu-24.04` runners on 4 October 2026 for the published `main` commit ([run 37225107078](https://github.com/AbhikRao/CardioScope/actions/runs/37225107078)) and the `v1.0.0` tag ([run 37225107079](https://github.com/AbhikRao/CardioScope/actions/runs/37225107079)). Both runs passed **134 Python tests and 75 frontend tests**, lint/type/build checks, the frozen-model and SHAP smoke test, and confirmed that all **256 protected files** are byte-identical. Earlier, the same suites passed on macOS ARM64 and clean Ubuntu ARM64. These hosted results cover the published V1 commits. The later presentation-only design update has local verification only until its own pull-request CI run passes ([design record](docs/submission/DESIGN_UPDATE.md)). Initial uncompressed JS dropped by about **78%** through lazy loading. Desktop Chromium, Firefox and Safari workflows were verified; no physical-device certification is claimed. [Hardening evidence](docs/HARDENING.md), [CI configuration](.github/workflows/ci.yml), [submission claim audit](docs/submission/CLAIM_AUDIT.md).
 
 Safe documentation-phase checks:
 

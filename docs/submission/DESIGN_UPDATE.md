@@ -68,7 +68,7 @@ This sequence uses frozen V1 inference in the running production build and is re
 4. Set **Typical Chest Pain** 0 → 1 and **Atypical** Y → N (valid source values only), then run prediction.
 5. Result: **CAD 64.5% (CAD)**, **LAD 56.1% (Stenotic)**, LCX 42.1%, RCA 34.8% (Normal); deltas +47.4 / +31.7 / +5.0 / +3.9 points. LAD turns gold on the heart. In the CAD explanation, Typical Chest Pain goes from −0.9143 to +0.9143 log-odds.
 
-The CAD/LAD movement shows how the frozen models behave on one input variation. It is not clinical effectiveness and not a causal claim.
+The CAD/LAD movement shows how the frozen models behave on one hypothetical variation with two changed inputs. It is not clinical effectiveness and not a causal claim.
 
 ## Before / after (real captures)
 

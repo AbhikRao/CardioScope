@@ -44,6 +44,28 @@ export function EvidencePage({ active, metadata }: { active: boolean; metadata: 
       <strong>Interpret within its limits.</strong> Same-source holdout, not external validation. Calibration and patient independence are unverified; LCX/RCA recall is weak.
       <a href="#limitations-heading">Read the full limitations</a>
     </aside>
+    <section className="panel evidence-chart" aria-labelledby="glance-heading">
+      <div className="section-heading"><div><span className="eyebrow">Final holdout at a glance</span><h2 id="glance-heading">Ranking vs. detection at the 0.5 threshold</h2></div>
+        <p>ROC-AUC measures ranking across all thresholds; recall is sensitivity at the fixed 0.5 threshold. Both use the same 61 records.</p></div>
+      <div className="chart-legend" aria-hidden="true"><span><i className="key-auc" />ROC-AUC</span><span><i className="key-recall" />Recall at 0.5</span>
+        <span><i className="key-ci" />Saved 95% interval</span><span>Dashed line: 0.5</span></div>
+      {TARGETS.map(target => {
+        const t = data.targets[target];
+        return <div className="chart-row" key={target} role="group" aria-label={`${target}: ROC-AUC ${f(t.metrics.roc_auc)}, recall ${f(t.metrics.recall)}`}>
+          <h3>{target === 'CAD' ? 'Overall CAD' : `${target} stenosis`}<span>{strength(target)}</span></h3>
+          <div className="chart-bars" aria-hidden="true">{(['roc_auc', 'recall'] as const).map(metric => {
+            const interval = t.uncertainty.intervals[metric].interval;
+            return <div className="chart-bar" key={metric}><span>{metric === 'roc_auc' ? 'ROC-AUC' : 'Recall'}</span>
+              <div className="chart-track"><span className={metric === 'roc_auc' ? 'auc' : 'recall'} style={{ width: `${t.metrics[metric] * 100}%` }} />
+                {interval && <i className="ci" style={{ left: `${interval[0] * 100}%`, width: `${(interval[1] - interval[0]) * 100}%` }} />}
+                <i className="reference" /></div>
+              <strong>{f(t.metrics[metric])}</strong></div>;
+          })}</div>
+        </div>;
+      })}
+      <div className="chart-axis" aria-hidden="true"><span /><div><span /><span><span>0</span><span>0.5</span><span>1.0</span></span><span /></div></div>
+      <p className="chart-note">CAD and LAD rank and detect well on this same-source holdout. LCX and RCA retain moderate ranking, but most of their positive records fall below 0.5 and are missed. Intervals are wide because the test set is small.</p>
+    </section>
     <section aria-labelledby="holdout-heading">
       <div className="section-heading"><div><span className="eyebrow">Frozen pipelines · threshold 0.5</span><h2 id="holdout-heading">Final holdout — 61 records</h2></div>
         <p>Same records across all four targets.<br />All values below come from the saved final evaluation.</p></div>
@@ -51,6 +73,7 @@ export function EvidencePage({ active, metadata }: { active: boolean; metadata: 
         const t = data.targets[target], weak = target === 'LCX' || target === 'RCA';
         return <article key={target} className={`panel performance-card ${weak ? 'limited-detection' : ''}`} aria-labelledby={`performance-${target}`} data-evidence-target={target}>
           <div className="card-heading"><h3 id={`performance-${target}`}>{target === 'CAD' ? 'Overall CAD' : `${target} stenosis`}</h3><span className="tag">{target}</span></div>
+          <span className="performance-strength">{strength(target)}</span>
           <div className="auc-number"><strong>{f(t.metrics.roc_auc)}</strong><span>ROC-AUC</span></div>
           <p className="interval">95% interval {range(t, 'roc_auc')}</p>
           <dl className="metric-list">{METRICS.filter(([key]) => key !== 'roc_auc').map(([key, label]) => <div key={key} className={key === 'recall' ? 'recall-row' : ''}>
@@ -97,6 +120,17 @@ export function EvidencePage({ active, metadata }: { active: boolean; metadata: 
       <p>Both use 100 deterministic development-only reference records. All 55 original features are displayed after aggregation of encoded contributions.
         Mathematical reconstruction is verified for every uncached explanation. SHAP describes the frozen model’s behavior, not clinical causality.</p>
     </section>
+    <section className="panel research-boundary" aria-labelledby="research-heading"><span className="eyebrow">After the final test · development-only research</span>
+      <h2 id="research-heading">Post-holdout studies did not change the product</h2>
+      <p>The holdout exposed weak LCX/RCA sensitivity. V1 stayed frozen and the holdout was treated as consumed. Two separately preregistered studies then used repeated nested cross-validation on the original 242 development records only.</p>
+      <div className="method-pair">
+        <div><h3>V2 · thresholds, elastic net, forests, XGBoost <span className="status">Joint gate failed</span></h3>
+          <p>Recovered much of the missed internal sensitivity, but did not meet the preregistered joint stability gate. Not deployed.</p></div>
+        <div><h3>V2.1 · small four-task neural network <span className="status">Joint gate failed</span></h3>
+          <p>RCA passed its internal vessel gate; LCX and CAD preservation did not. No final candidate was fitted. Not deployed.</p></div>
+      </div>
+      <p className="muted">These are internal development results, not test results or independent validation. Every metric on this page is the frozen V1 product. Details: <a href="https://github.com/AbhikRao/CardioScope/blob/main/docs/V2_LCX_RCA.md" target="_blank" rel="noreferrer">V2 report</a> · <a href="https://github.com/AbhikRao/CardioScope/blob/main/docs/V21_MULTITASK.md" target="_blank" rel="noreferrer">V2.1 report</a>.</p>
+    </section>
     <section className="panel limitations" aria-labelledby="limitations-heading"><span className="eyebrow">Scope of this prototype</span><h2 id="limitations-heading">Limitations that matter</h2>
       <ul><li>Only 303 records; the same-source holdout is not external validation.</li>
         <li>Authoritative patient IDs are unavailable, so patient independence cannot be fully verified.</li>
@@ -123,11 +157,14 @@ export function EvidencePage({ active, metadata }: { active: boolean; metadata: 
     </section>
   </div>;
 }
+function strength(target: Target) {
+  return target === 'CAD' || target === 'LAD' ? 'Stronger ranking and recall' : 'Moderate ranking · weak recall at 0.5';
+}
 function ConfusionMatrix({ target, data }: { target: Target; data: EvidenceTarget }) {
   const [[tn, fp], [fn, tp]] = data.metrics.confusion_matrix, positive = data.definition.positive_class;
   return <article className="panel matrix-card"><h3>{target}</h3><table><caption>Observed rows / predicted columns</caption><thead><tr><td />
     <th scope="col">Normal</th><th scope="col">{positive}</th></tr></thead><tbody>
       <tr><th scope="row">Normal</th><td><strong>{tn}</strong><span>True negative</span></td><td><strong>{fp}</strong><span>False positive</span></td></tr>
-      <tr><th scope="row">{positive}</th><td className="false-negative"><strong>{fn}</strong><span>False negative</span></td><td><strong>{tp}</strong><span>True positive</span></td></tr>
+      <tr><th scope="row">{positive}</th><td className="false-negative"><strong>{fn}</strong><span>False negative</span></td><td className="true-positive"><strong>{tp}</strong><span>True positive</span></td></tr>
     </tbody></table><p>{fn} missed / {data.metrics.class_counts['1']} positive records</p></article>;
 }

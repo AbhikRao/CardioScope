@@ -34,6 +34,9 @@ for record in PROVENANCE.get('derived_crops', []):
         expected = original.crop(record['crop_box_ltrb'])
         assert crop.size == expected.size and crop.mode == expected.mode
         assert crop.tobytes() == expected.tobytes()
+# Design-update captures (real production-build screenshots) are hash-checked the same way.
+V2 = json.loads((DIR / 'assets/v2/provenance.json').read_text())
+V2_HASHES = {r['path']: r['sha256'] for r in V2['records']}
 OUT = ROOT / 'output/pdf/CardioScope-Track-A-Report.pdf'
 OUT.parent.mkdir(parents=True, exist_ok=True)
 W, H = A4
@@ -78,7 +81,7 @@ def title(page, eyebrow, headline, subtitle):
     C.line(M, 43, W-M, 43)
     C.setFont('Helvetica', 7.5)
     C.setFillColor(MUTED)
-    C.drawString(M, 28, 'Frozen V1  |  Research / educational prototype  |  4 October 2026')
+    C.drawString(M, 28, 'Frozen V1 models  |  Research / educational prototype  |  github.com/AbhikRao/CardioScope')
     C.drawRightString(W-M, 28, f'{page} / 6')
 
 
@@ -100,6 +103,39 @@ def image(name, y, height=None):
     C.roundRect(x-1, y-height-1, width+2, height+2, 3, fill=0, stroke=1)
     C.drawImage(reader, x, y-height, width, height, mask='auto')
     return y-height
+
+
+def v2image(name, x, y, width=None, height=None):
+    path = f'docs/submission/assets/v2/{name}.png'
+    assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == V2_HASHES[path], path
+    reader = ImageReader(str(ROOT / path))
+    iw, ih = reader.getSize()
+    if width is None:
+        width = height*iw/ih
+    height = width*ih/iw
+    assert x + width <= W - M + 0.01 and y - height >= 50, (name, y, height)
+    C.setStrokeColor(colors.HexColor('#D5E3E7'))
+    C.roundRect(x-1, y-height-1, width+2, height+2, 3, fill=0, stroke=1)
+    C.drawImage(reader, x, y-height, width, height, mask='auto')
+    return y-height
+
+
+def metric_tiles(y):
+    gap = 8
+    bw = (CW-3*gap)/4
+    for i, target in enumerate(['CAD', 'LAD', 'LCX', 'RCA']):
+        m = CLAIMS['v1']['metrics'][target]
+        weak = target in ('LCX', 'RCA')
+        x = M+i*(bw+gap)
+        C.setFillColor(colors.HexColor('#FFF4E1') if weak else LIGHT)
+        C.roundRect(x, y-62, bw, 62, 5, fill=1, stroke=0)
+        C.setFillColor(INK); C.setFont('Helvetica-Bold', 9); C.drawString(x+9, y-14, target)
+        C.setFillColor(AMBER if weak else TEAL); C.setFont('Helvetica-Bold', 19)
+        C.drawString(x+9, y-36, f"{m['roc_auc']:.3f}")
+        C.setFont('Helvetica', 7.2); C.setFillColor(MUTED)
+        C.drawString(x+9, y-47, 'holdout ROC-AUC')
+        C.drawString(x+9, y-56, f"recall at 0.5: {m['recall']:.3f}" + ('  (weak)' if weak else ''))
+    return y-62
 
 
 def callout(text, y, height=60, warning=False):
@@ -128,16 +164,15 @@ def flow(labels, y, width=CW, x=M):
 
 
 # PAGE 1: solution
-title(1, 'Problem + solution', 'Prediction with anatomical context',
-      'CardioScope connects a structured clinical profile to four frozen classifiers, real interactive coronary anatomy, model explanations and transparent evidence.')
-y=H-152
-y=para('Clinical models can produce numbers that are difficult to interpret spatially. CardioScope makes the relationship between a vessel output and reference anatomy visible, while keeping the evidence and limitations beside the prediction.', y, size=11)
-y=flow(['<b>55-feature</b><br/>profile', '<b>Four frozen</b><br/>predictions', '<b>Reference 3D</b><br/>heart / vessels', '<b>SHAP +</b><br/>evidence'], y-18)
-y=image('product-hero.png', y-20, height=285)
-y=para('<b>Real V1 interface.</b> The public development example is loaded; LAD is selected. Vessel colors reflect model-estimated probabilities. The anatomy is a reference model, not this person\'s heart.', y-10, size=8.8, color=MUTED)
-y=heading('Four outputs, one inspectable workflow', y-20)
-y=para('<b>CAD</b> describes the overall dataset CAD target. <b>LAD, LCX and RCA</b> describe the three source vessel targets. These are separate classifier outputs, not a joint probability distribution. A judge can move from numerical outputs to the corresponding vessel, then inspect the explanation and saved evaluation.', y)
-callout('<b>Educational / research decision-support prototype.</b> Not a diagnostic replacement, treatment recommendation or clinically validated risk estimate.', y-16, height=54)
+title(1, 'Problem + solution', 'Coronary model outputs on real anatomy',
+      'CardioScope connects 55 structured clinical inputs to four frozen classifiers, an interactive BodyParts3D heart, verified SHAP explanations and transparent saved evidence.')
+y=H-148
+y=para('A probability table is hard to read spatially. In CardioScope a user clicks an artery on the heart; its card, color and explanation follow, and every number links back to the once-only holdout evidence.', y, size=10.5)
+y=metric_tiles(y-10)
+y=para('Prespecified 61-record same-source holdout, evaluated once after freezing. CAD/LAD are strong; LCX/RCA rank moderately but miss most positives at the fixed 0.5 threshold.', y-6, size=8.3, color=MUTED)
+y=v2image('report-stage-LAD-selected', M, y-10, width=CW)
+y=para('<b>Real production-build capture.</b> Public development example; LAD selected by click, so the other vessels fade. Each whole artery is colored by its own model-estimated probability (gold = 0.5). Reference anatomy, not this person\'s heart.', y-7, size=8.3, color=MUTED)
+callout('<b>Educational / research decision-support prototype.</b> Not a diagnostic replacement or validated clinical risk. Source: <link href="https://github.com/AbhikRao/CardioScope" color="#007F83">github.com/AbhikRao/CardioScope</link>', y-10, height=50)
 C.showPage()
 
 # PAGE 2: method
@@ -205,34 +240,61 @@ para('Small-test uncertainty matters: saved 95% ROC-AUC intervals are CAD 0.819-
 C.showPage()
 
 # PAGE 4: anatomy
-title(4,'3D + integration','Real anatomy, clearly bounded',
-      'BodyParts3D supplies verified reference geometry. A vessel card and its 3D group share one selection state; the model output remains numerical and inspectable.')
-y=image('anatomy-posterior-LCX-crop.png',H-151,height=285)
-y=para('<b>Real application crop:</b> posterior preset, LCX selected, heart and all vessels shown. Named controls, renderer-ready status and the LCX label remain visible. No screenshot content was altered.',y-10,size=8.8,color=MUTED)
-y=heading('83 mesh leaves, one coordinate system',y-17)
-y=para('<b>Heart base 30 / LAD 18 / LCX 6 / RCA 29.</b> Verified source mappings define the groups. All leaves retain one source coordinate system and one assembly center/scale transform. Coronary leaves are excluded from the heart base; no artery is individually repositioned.',y)
-y=heading('Interaction connected to frozen inference',y-17)
-y=para('React + TypeScript renders the Three.js / React Three Fiber viewer. FastAPI validates all 55 inputs and returns frozen-pipeline probabilities. Mesh selection updates the output card; card selection highlights the same group. Orbit, zoom, reset, anterior/posterior presets, isolation and show-all support inspection.',y)
-y=para('Blue-to-red color follows whole-vessel model probability; selection is a separate highlight. Without predictions, styling is neutral. Loading, partial mesh and WebGL failures are explicit. Numerical predictions and Evidence remain available if 3D fails.',y-10)
-y=callout('<b>Reference anatomy only.</b> No patient reconstruction, lesion localization, vessel-diameter estimation, stenosis geometry or exact narrowing percentage is inferred.',y-15,height=55,warning=True)
-para('Source credit: BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International (current archive license). Mapping/subtraction and the shared display transform are documented adaptations; source OBJ leaves remain unchanged.',y-5,size=8.5,color=MUTED)
+title(4,'3D + integration','One click, one connected system',
+      'BodyParts3D geometry is wired to frozen inference: card and mesh share one selection, colors follow live outputs, and explanations follow the selected artery.')
+y=H-150
+half=(CW-12)/2
+C.setFillColor(INK); C.setFont('Helvetica-Bold', 9)
+C.drawString(M, y, 'Public development example'); C.drawString(M+half+12, y, 'Hypothetical edit: Typical Chest Pain 0 -> 1, Atypical Y -> N')
+v2image('report-canvas-example', M, y-6, width=half)
+y=v2image('report-canvas-hypothetical', M+half+12, y-6, width=half)
+cards={r['path'].split('/')[-1]: r['outputs'] for r in V2['records'] if 'report-cards' in r['path']}
+assert cards['report-cards-example.png'] == {'CAD':'17.1% Normal','LAD':'24.3% Normal','LCX':'37.1% Normal','RCA':'30.9% Normal'}
+assert cards['report-cards-hypothetical.png'] == {'CAD':'64.5% CAD','LAD':'56.1% Stenotic','LCX':'42.1% Normal','RCA':'34.8% Normal'}
+rows=[('Target','Unedited example','Hypothetical edit','Change'),('CAD','17.1%  Normal','64.5%  CAD','+47.4 pts'),('LAD','24.3%  Normal','56.1%  Stenotic','+31.7 pts'),('LCX','37.1%  Normal','42.1%  Normal','+5.0 pts'),('RCA','30.9%  Normal','34.8%  Normal','+3.9 pts')]
+y-=12
+cols=[M, M+90, M+230, M+380]
+for j,row in enumerate(rows):
+    if j%2==0:
+        C.setFillColor(LIGHT); C.rect(M, y-15, CW, 16, fill=1, stroke=0)
+    C.setFillColor(INK); C.setFont('Helvetica-Bold' if j==0 else 'Helvetica', 8.6)
+    for x,cell in zip(cols,row): C.drawString(x+6, y-11, cell)
+    y-=16
+top=y-8
+v2image('report-cards-example', M, top, width=half)
+y=v2image('report-cards-hypothetical', M+half+12, top, width=half)
+y=para('Real output cards from the running application (same states as above): class pills flip for CAD and LAD; the hypothetical card keeps the unedited value for comparison. The edit is labeled in the UI and is not a real patient, intervention or causal effect. LCX/RCA barely respond, consistent with their weak holdout sensitivity.', y-6, size=8.3, color=MUTED)
+y=heading('83 verified mesh leaves, one coordinate system', y-12)
+y=para('<b>Heart base 30 / LAD 18 / LCX 6 / RCA 29</b>, one shared source coordinate system and assembly transform; coronary leaves are excluded from the heart base. Selection works both ways (mesh to card, card to mesh) and also switches the explanation target. Presets animate the camera only; isolate, orbit and zoom support inspection.', y, size=9.3)
+y=para('A continuous OKLab scale (blue, teal, gold at 0.5, orange, red) maps each whole vessel\'s probability; nearby outputs stay distinguishable, unlike the earlier constant-lightness blend. Loading, missing-mesh and WebGL failures are explicit; numbers remain available.', y-8, size=9.3)
+callout('<b>Reference anatomy only.</b> No patient reconstruction, lesion localization, vessel-diameter estimate or narrowing percentage is inferred. Source: BodyParts3D, © The Database Center for Life Science, CC Attribution 4.0 International.', y-12, height=64, warning=True)
 C.showPage()
 
 # PAGE 5: explanation
-title(5,'Explainability','Explain the model, preserve the units',
-      'SHAP connects entered values to positive and negative contributions. The explanation is checked against the actual frozen output, rather than used as a clinical narrative.')
-y=image('explanation-CAD-higher-crop.png',H-151)
-y=image('explanation-CAD-lower-crop.png',y-10)
-y=para('<b>Two crops from one real CAD explanation:</b> the public development example gives a 17.1% model output. The first two factors in each direction are enlarged here; entered values and signed log-odds contributions are unchanged. The application retains all 55 factors, their sum and reconstruction check.',y-10,size=8.8,color=MUTED)
-y=heading('Two methods, two explicit contribution spaces',y-17)
+title(5,'Explainability','Why the model produced this output',
+      'Signed SHAP factors link each entered value to the selected target. Every explanation is checked against the actual frozen output before it is shown.')
+y=H-148
+y=v2image('report-factors-CAD-example', M, y, width=CW)
+y=para('<b>Real capture, public example, CAD 17.1%:</b> the five largest factors in each direction, in model log-odds. Readable names expand documented source abbreviations (code shown beneath); entered values are unchanged. Typical Chest Pain (entered 0) is the largest single factor; after the hypothetical edit on page 4 it becomes +0.914.', y-7, size=8.4, color=MUTED)
+glossary=[('FH','Family history'),('DLP','Dyslipidemia'),('HTN','Hypertension'),('DM','Diabetes mellitus'),('CRF','Chronic renal failure'),('CVA','Cerebrovascular accident'),('ESR','Erythrocyte sedimentation rate'),('BUN','Blood urea nitrogen'),('EF-TTE','Ejection fraction'),('Region RWMA','Region with regional wall motion abnormality'),('LowTH Ang','Low-threshold angina'),('VHD','Valvular heart disease')]
+y=heading('Readable names for source codes (display only)',y-12)
+colw=CW/2
+for i,(code,name) in enumerate(glossary):
+    x=M+(i%2)*colw; row=i//2
+    if (i%2)==0 and row%2==0:
+        C.setFillColor(LIGHT); C.rect(M, y-row*14-11, CW, 14, fill=1, stroke=0)
+    C.setFillColor(INK); C.setFont('Courier-Bold',8.2); C.drawString(x+6, y-row*14-8, code)
+    C.setFont('Helvetica',8.4); C.drawString(x+78, y-row*14-8, name)
+y-=len(glossary)//2*14+4
+y=para('Expansions come from published descriptions of the Z-Alizadeh Sani feature table (docs/FEATURE_LABELS.md). Ambiguous codes (Atypical, Length, CR) stay unexpanded; no units are added.', y-2, size=7.8, color=MUTED)
+y=heading('Two methods, two explicit contribution spaces',y-10)
 for i,(head,text) in enumerate([('CAD + LAD','Linear SHAP<br/><b>Positive-class log-odds</b><br/>Baseline + contributions reconstruct the decision score; sigmoid returns probability.'),('LCX + RCA','TreeSHAP<br/><b>Positive-class probability space</b><br/>Baseline + contributions reconstruct the forest probability directly.')]):
     x=M+i*(CW+12)/2; bw=(CW-12)/2
-    C.setFillColor(LIGHT); C.roundRect(x,y-103,bw,103,6,fill=1,stroke=0)
-    para(f'<b>{head}</b><br/>{text}',y-10,x=x+12,width=bw-24,size=9.5,max_height=84)
-y-=122
-y=para('A deterministic <b>100-record development-only reference/background</b> is frozen. All <b>55 source variables</b> are retained; one-hot encoded category blocks are aggregated back to their source feature. The visible top factors do not discard the remaining contribution mass.',y)
-y=para('Reconstruction uses unrounded values: tolerance <b>1e-10 in log-odds</b> and <b>1e-6 in probability space</b>. The probability tree adapter preserves float32 tree routing. Explanation failure is contained: the valid prediction remains available with an explicit explanation failure state.',y-10)
-callout('<b>SHAP explains model behavior.</b> Feature associations do not establish causality, clinical mechanism or a treatment recommendation. The background defines the reference, not a healthy control cohort.',y-16,height=57,warning=True)
+    C.setFillColor(LIGHT); C.roundRect(x,y-86,bw,86,6,fill=1,stroke=0)
+    para(f'<b>{head}</b><br/>{text}',y-9,x=x+12,width=bw-24,size=9.3,max_height=72)
+y-=100
+y=para('A deterministic <b>100-record development-only reference</b> is frozen. All <b>55 source variables</b> are retained; one-hot blocks aggregate to their source feature, and the remaining factors are summed so nothing is hidden. Reconstruction tolerance: <b>1e-10 log-odds / 1e-6 probability</b>; the interface shows a verified badge and keeps baseline, residual and identity fingerprints one click away.', y, size=9.3)
+callout('<b>SHAP explains model behavior.</b> Associations do not establish causality, clinical mechanism or treatment. The reference set is not a healthy control cohort.', y-12, height=50, warning=True)
 C.showPage()
 
 # PAGE 6: integrity
@@ -240,8 +302,8 @@ title(6,'Integrity + limitations','Reproducible, with honest boundaries',
       'The scientific V1 product remains frozen. Engineering checks and separately bounded research do not turn a small same-source evaluation into clinical validation.')
 y=H-135
 y=heading('Engineering evidence',y)
-y=para('<b>Historical hardened V1:</b> 134 Python tests and 75 frontend tests passed on macOS and clean Ubuntu ARM64. Docker execution, deterministic scientific checks and desktop Chromium / Firefox / Safari workflows were verified. GitHub Actions is configured and equivalent Ubuntu checks passed locally; <b>hosted CI has not run</b>.',y)
-y=para('<b>256 protected scientific files</b> are checksum verified. Model, schema, split, receipt, SHAP and anatomy assets remain fixed. Initial JavaScript fell from 1,216,295 to 266,391 bytes (about <b>78%</b>) through lazy loading; the viewer chunk still loads when needed. Local viewer measurements were around 59-60 FPS, not a universal hardware guarantee.',y-11)
+y=para('<b>Hosted GitHub Actions passed</b> (4 Oct 2026, ubuntu-24.04) for the published <b>main</b> and <b>v1.0.0</b> commits: <b>134 Python + 75 frontend tests</b>, frozen-model/SHAP smoke checks and all <b>256 protected files byte-identical</b> (runs 37225107078 / 37225107079). The same suites passed earlier on macOS ARM64 and clean Ubuntu ARM64; desktop Chromium / Firefox / Safari workflows and Docker were verified locally.',y)
+y=para('<b>256 protected scientific files</b> are checksum verified: model, schema, split, receipt, SHAP and anatomy assets remain fixed. Lazy loading cut initial JavaScript from 1,216,295 to 266,391 bytes (about <b>78%</b>); the October design update (presentation only: layout, labels, color scale) is 259,557 bytes and passed the same 75 frontend tests and protected-file check locally.',y-11)
 y=heading('What we learned after final evaluation',y-14)
 y=para('After weak LCX/RCA sensitivity, we preregistered separate <b>post-holdout, development-only</b> studies. Threshold/model and multi-task approaches failed their predefined <b>joint gates</b>. V1, evaluated once on the prespecified 61-record same-source holdout, remained unchanged.',y)
 y=para('V2 tested thresholds, elastic-net, forests/cost sensitivity and XGBoost. V2.1 tested a small four-task network: RCA\'s mean scores were higher on paired development folds, but LCX and CAD preservation failed. No final all-development neural candidate was fitted. <b>Neither study is deployed or independently validated.</b>',y-11)
@@ -250,8 +312,7 @@ y=para('Only 303 source records; just 61 final-test records. Same-source holdout
 y=heading('Reproduce the product',y-14)
 y=para('<font name="Courier">make install<br/>make prepare<br/>make build<br/>make run PORT=8000</font><br/>Open the printed localhost URL and load the public development example. Dependencies need network for installation; the prepared local product can run offline. The repository includes frozen pipelines, sources/provenance, deterministic locks, Docker instructions and integrity checks.',y,size=9.5)
 y=heading('Sources and accompanying evidence',y-17)
-y=para('Dataset: UCI Extension of Z-Alizadeh Sani, DOI <link href="https://doi.org/10.24432/C5461K" color="#007F83">10.24432/C5461K</link>, CC BY 4.0.<br/>Anatomy: <link href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html" color="#007F83">current BodyParts3D archive license</link>, CC BY 4.0.<br/>Repository: README; docs/MODELING.md, FINAL_EVALUATION.md, EXPLANATIONS.md, HARDENING.md, V2_LCX_RCA.md and V21_MULTITASK.md. Report numbers are copied from saved aggregate evidence; no evaluation or training is invoked by this source.',y,size=8.8,color=MUTED)
-callout('Educational / research prototype. Inspect the saved evidence alongside every output. All upstream dataset, anatomy and dependency attribution must be retained.',y-15,height=50)
+y=para('Dataset: UCI Extension of Z-Alizadeh Sani, DOI <link href="https://doi.org/10.24432/C5461K" color="#007F83">10.24432/C5461K</link>, CC BY 4.0.<br/>Anatomy: <link href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html" color="#007F83">current BodyParts3D archive license</link>, CC BY 4.0.<br/>Repository: <link href="https://github.com/AbhikRao/CardioScope" color="#007F83">github.com/AbhikRao/CardioScope</link> (MIT). README; docs/MODELING.md, FINAL_EVALUATION.md, EXPLANATIONS.md, HARDENING.md, V2_LCX_RCA.md and V21_MULTITASK.md. Report numbers are copied from saved aggregate evidence; no evaluation or training is invoked by this source. Upstream dataset, anatomy and dependency attribution is retained.',y,size=8.8,color=MUTED)
 C.showPage()
 C.save()
 print(f'Created {OUT.relative_to(ROOT)} (6 explicit pages)')

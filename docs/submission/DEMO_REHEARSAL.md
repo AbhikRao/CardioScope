@@ -1,62 +1,67 @@
 # Deterministic demo rehearsal
 
-Use only the existing public development example. No source-profile editing, training, evaluation, threshold adjustment or scientific changes are part of rehearsal. The [storyboard](DEMO_SCRIPT.md) targets 5:10; the actual recorded video must remain within 3-10 minutes.
+This rehearsal uses only the existing public development example and one labeled hypothetical edit of it. Training, evaluation, threshold changes and scientific changes are not part of rehearsal. The [storyboard](DEMO_SCRIPT.md) targets about 4:50; the recorded video must stay within 3–10 minutes.
 
 ## Environment and pre-roll
 
-- Browser: the tested in-app Chromium, Firefox 157.0 or Safari 27.2 on the verified macOS environment. These describe recorded checks, not universal version requirements.
-- Recording viewport: **1440 x 1000 CSS pixels**, desktop, 100% zoom. Keep personal tabs/chrome outside the recording. Reset temporary capture overrides afterward.
-- Preferred app URL: `http://127.0.0.1:8000/`. Capture/rehearsal may use `http://127.0.0.1:8005/` without changing an existing server.
-- Install/build ahead of recording with `make install prepare verify build`. Packages/base images need network; frozen inference does not.
-- Start/restart: **Ctrl-C** in the identified local server terminal, then `make run PORT=8000`. If another server owns it, use `make run PORT=8005`. Do not terminate an unidentified process.
-- Prepare the architecture SVG in a separate local tab/document preview. One optional static-only command is `python3 -m http.server 8006 --bind 127.0.0.1 --directory docs/submission/assets`; open `http://127.0.0.1:8006/architecture.svg`. This serves existing presentation assets only, without modifying the application. Stop that server afterward.
-- Before the take: refresh, load the public example, run prediction, wait for all outputs and complete geometry. **Reset view**, **Show all**, **Anterior view**, select **RCA**. Frame the heart and vessel controls, with the LAD card/control visible and the disclaimer retained. The take begins with a prepared example, not an empty form.
+1. Build ahead of time with `make install prepare verify build`.
+2. Start with `make run PORT=8000` and open `http://127.0.0.1:8000/`. If port 8000 is already in use, use `PORT=8005`. Never stop an unidentified process.
+3. Set the viewport to **1440 × 1000 CSS px**, desktop, 100% zoom, with personal tabs out of frame. The design was checked in Chromium. Use a GPU-backed desktop browser for smooth rotation; a headless software renderer is slower.
+4. **Prepared state for 0:00:**
+   1. Refresh the page.
+   2. Click **Load development example**, then **Run prediction**.
+   3. Wait for all four cards and the ✓ badge.
+   4. Click **Reset view**.
+   5. Scroll so the four cards, the full heart and the legend are in frame.
 
-## Fixed example and outputs
+## Fixed outputs (frozen V1 inference)
 
-Source ID: `0056fb5ae87a9ac1510fd77cb5cd6bd3b348a0d0de578cf1a86132f8d87733dc`. Confirm **55/55 valid** and the explicit public-example label.
+The source example ID is `0056fb5ae87a9ac1510fd77cb5cd6bd3b348a0d0de578cf1a86132f8d87733dc`.
 
-| Target | Frozen probability | UI display | Dataset class at 0.5 |
-|---|---:|---:|---|
-| CAD | 0.1709399517600908 | 17.1% | Normal |
-| LAD | 0.24305384913623826 | 24.3% | Normal |
-| LCX | 0.3705140009054133 | 37.1% | Normal |
-| RCA | 0.3090592361868292 | 30.9% | Normal |
+| Target | Public example | UI | Hypothetical edit | UI | UI delta |
+|---|---:|---|---:|---|---|
+| CAD | 0.1709399517600908 | 17.1% Normal | 0.6453028264041153 | 64.5% **CAD** | +47.4 pts |
+| LAD | 0.2430538491362383 | 24.3% Normal | 0.5605017044740898 | 56.1% **Stenotic** | +31.7 pts |
+| LCX | 0.3705140009054133 | 37.1% Normal | 0.4207450909711793 | 42.1% Normal | +5.0 pts |
+| RCA | 0.3090592361868292 | 30.9% Normal | 0.3483626450065975 | 34.8% Normal | +3.9 pts |
 
-Allow minor platform roundoff up to 1e-12. Normal is the **model's dataset class label**, not a clinical finding that disease is absent. During the input section, reload the same example and rerun prediction; do not edit values. New predictions choose CAD as explanation target; select RCA explicitly before the later synchronization demonstration.
+**Hypothetical edit, using exact source values only:**
+- **Typical Chest Pain:** 0 → **1** (integer field)
+- **Atypical:** Y → **N** (category select)
 
-## Reproducible bidirectional selection
+Both fields are in the *Examination and symptoms* group. Use that group button to jump there, then scroll within the form.
 
-1. Start anterior, show all, **RCA selected**. Confirm RCA selected, LAD not selected. Do not select LAD before clicking its mesh.
-2. Click an exposed descending **LAD** segment on the anterior heart. Confirm **LAD selected** in both the viewer and its card/control, with RCA cleared. Use visible anatomy, not fixed screen coordinates; framing changes the click location. This transition was reproduced in the unchanged app during the polish pass.
-3. Click **Select LCX anatomy** in the card/control. Confirm LCX geometry highlight and label. This separately demonstrates UI → anatomy.
-4. If a mesh click hits empty space or another vessel, stop the take and rehearse the visible LAD segment again. A named-button click alone cannot prove mesh → UI synchronization. Avoid trying to pick hidden LCX geometry.
+After the edit, the form shows the amber note *Hypothetical variation of the public example*, which lists both changes; the edited fields are outlined. **Restore the unedited example** reloads the original values. Results always describe the profile that was last run.
 
-## Camera sequence and timing
+**CAD explanation anchors:**
+- Example: Typical Chest Pain −0.9143 (largest factor), Family history +0.7251.
+- After the edit: Typical Chest Pain **+0.9143**.
 
-- Teaser **0:00-0:10**: the prepared RCA → LAD mesh click. Then return to the page top for context.
-- Architecture **1:30-1:40**: switch to the prepared existing diagram; trace its actual arrows. Return to the app for anatomy.
-- Main anatomy **1:40-2:35**: reset, show all, anterior, RCA → LAD mesh click → LCX card. One short drag, brief zoom, reset, LCX, posterior, isolate, show all. No long orbit/search for a hidden vessel.
-- Drag from about 50% canvas width/50% height to 62%/44% over a second; wheel up briefly. Deltas depend on browser input. Preset top is superior; after dragging, the UI says **last preset**, not guaranteed current orientation.
-- Ending **4:40-4:50**: return to Prediction, scroll to anatomy, **LAD**, **Show all**, **Anterior view**. Prepare this frame before the final 20 seconds of speech. Navigation preserves scroll, so explicitly check framing.
+## Reproducible selection checks
 
-## Explanation and Evidence anchors
-
-- **CAD**: wait for verified factors. Point to **Typical Chest Pain**, **Entered: 0**, negative contribution (displayed about **-0.9143 log-odds**) as the one concrete example. Remaining factors are retained and reconstruct the output. Do not read residual digits aloud.
-- Switch to **RCA** to show probability contribution units. CAD/LAD use log-odds; LCX/RCA probability space. These magnitudes cannot be directly compared.
-- Numerical tolerances remain **1e-10 / 1e-6** respectively. Reconstruction checks numerical consistency, not clinical correctness, causality or correlated-feature stability. All 55 factors are available without expanding them during the timed narration.
-- Evidence displays saved aggregates, not new evaluation. Show **303 / 242 / 61**, **Final holdout - 61 records**, then CAD/LAD stronger discrimination/recall and weak LCX/RCA sensitivity. Point to numbers rather than reading decimals. Briefly show matrices and limitations.
-- The shorter research narration ends at 4:40, leaving a dedicated 10-second action pause and an uninterrupted 20-second close.
+1. **Mesh → UI.** In the anterior view, with nothing selected, click the descending **LAD** on the anterior surface (right of center). Confirm all four:
+   - LAD glows and the other vessels fade;
+   - the LAD card shows *Selected*;
+   - the readout says *Selected: LAD — Left anterior descending artery*;
+   - the explanation target switches to LAD.
+2. **UI → mesh.** Click **Select LCX anatomy** on the card. The camera animates to the posterior view, LCX is highlighted and the explanation switches to LCX. Don't try to click hidden LCX geometry from the front.
+3. Use **Isolate selected vessel** → **Show all** → **Reset view**. Reset clears the selection and returns the explanation to CAD.
+4. If a click misses or hits another vessel, stop and retake. A button click alone does not prove mesh picking.
 
 ## Failure and offline plans
 
 | Failure | Honest recovery |
 |---|---|
-| Mesh picking misses | Rehearse the exposed anterior LAD segment; rerecord the take. Do not substitute a same-vessel button/mesh click as synchronization proof. |
-| WebGL unavailable/context lost | Show the explicit failure and numerical fallback; recover/restart for the working-interaction take. A labeled real still is illustrative, not proof of a live viewer. |
-| SHAP unavailable/error | Predictions/evidence remain visible. State explanation unavailable; do not manufacture factors. A real same-example capture may be labeled as a still. |
-| Backend restart | Stop only the identified server, restart with the command above, reload the same example and rerun frozen prediction. No evaluation command. |
-| Network unavailable | With packages installed, frontend built and artifacts present, prediction, SHAP, meshes and saved evidence run locally. No cloud AI API/CDN. Fresh builds and upstream links need network. |
-| Report/still fallback | Use the existing [real captures](SCREENSHOTS.md), explicitly identified as saved images. They cannot replace the main video's working-app interaction evidence. |
+| Mesh click misses | Rehearse the exposed anterior LAD and retake. |
+| WebGL unavailable or context lost | The app shows an explicit failure and the numbers remain. Restart for the working take; a still image is not proof of interaction. |
+| SHAP unavailable | Predictions stay visible with an explicit *unavailable* state. Don't invent factors. |
+| Backend restart | Restart only the identified server, then reload the example and rerun. Never run an evaluation command. |
+| Network unavailable | After install and build, inference, SHAP, meshes and evidence all run locally. |
 
-Before recording: verify all expected outputs, geometry ready, distinct selection transitions, correct SHAP units, evidence heading, final framing and audible narration. The polish pass verified RCA → LAD geometry selection in the browser; it did **not** record or time a complete video. Measure the actual exported take, including action pauses, before upload.
+Before recording, check:
+- both output states match the table above;
+- the colors visibly change (LAD teal → gold);
+- the evidence chart renders;
+- the final frame is prepared before the closing line.
+
+Measure the exported duration before uploading.

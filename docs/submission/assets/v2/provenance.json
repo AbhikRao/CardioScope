@@ -1,0 +1,363 @@
+{
+  "browser": "Playwright Chromium 151.0.7922.34 (headless, SwiftShader WebGL)",
+  "app_url": "http://127.0.0.1:8000/",
+  "build": "production frontend/dist served by backend.app",
+  "records": [
+    {
+      "path": "docs/submission/assets/v2/overview.png",
+      "sha256": "cf60ec794093cb58d5a2b6854081369520fff48e378ab95773d552e2e181b430",
+      "captured_at_utc": "2026-10-12T14:09:45.602Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": "viewport",
+      "state": "Unedited public development example after frozen inference; top of Prediction page",
+      "outputs": {
+        "CAD": "17.1% Normal",
+        "LAD": "24.3% Normal",
+        "LCX": "37.1% Normal",
+        "RCA": "30.9% Normal"
+      }
+    },
+    {
+      "path": "docs/submission/assets/v2/outputs-anatomy-example.png",
+      "sha256": "cef66b905ead73a41e6cc05bd844493381258393d63a3aa2c30e830cbf6bd61c",
+      "captured_at_utc": "2026-10-12T14:09:56.153Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".output-workspace",
+      "state": "Unedited public example; anterior view; no vessel selected",
+      "outputs": {
+        "CAD": "17.1% Normal",
+        "LAD": "24.3% Normal",
+        "LCX": "37.1% Normal",
+        "RCA": "30.9% Normal"
+      }
+    },
+    {
+      "path": "docs/submission/assets/v2/anatomy-LAD-selected.png",
+      "sha256": "5f77d8791d1bf57b1f860834f2271fe6df38314ca1851071d64e68d6a114e823",
+      "captured_at_utc": "2026-10-12T14:11:24.665Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".anatomy-panel",
+      "state": "Unedited public example; LAD selected from its card; other vessels faded",
+      "outputs": {
+        "CAD": "17.1% Normal",
+        "LAD": "24.3% Normal",
+        "LCX": "37.1% Normal",
+        "RCA": "30.9% Normal"
+      }
+    },
+    {
+      "path": "docs/submission/assets/v2/explanation-CAD-example.png",
+      "sha256": "3fcd0ce787bfb6b03b1f22b7dc92e84bf0678fb15269e819f6bef3e1f479241f",
+      "captured_at_utc": "2026-10-12T14:11:28.196Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".explanation",
+      "state": "Unedited public example; CAD explanation",
+      "outputs": {
+        "CAD": "17.1% Normal",
+        "LAD": "24.3% Normal",
+        "LCX": "37.1% Normal",
+        "RCA": "30.9% Normal"
+      }
+    },
+    {
+      "path": "docs/submission/assets/v2/hypothetical-edit-form.png",
+      "sha256": "1a093f5fa13df54bf8fd9f81674a78730c05b74d43f9c855345984bc9eff189e",
+      "captured_at_utc": "2026-10-12T14:11:31.049Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".profile-panel",
+      "state": "Hypothetical variation entered before prediction: Typical Chest Pain 0 -> 1, Atypical Y -> N",
+      "hypothetical_inputs_changed": {
+        "Typical Chest Pain": [
+          0,
+          1
+        ],
+        "Atypical": [
+          "Y",
+          "N"
+        ]
+      },
+      "label": "Hypothetical variation of the public development example; not a real patient, intervention or causal effect."
+    },
+    {
+      "path": "docs/submission/assets/v2/outputs-anatomy-hypothetical.png",
+      "sha256": "9e6a95cd36796b367671b281b6b8ba0f04a7a0ebb09c8a2c581ce375edefd517",
+      "captured_at_utc": "2026-10-12T14:11:47.818Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".output-workspace",
+      "state": "Hypothetical variation (Typical Chest Pain 0 -> 1, Atypical Y -> N); anterior view; no vessel selected",
+      "outputs": {
+        "CAD": "64.5% CAD",
+        "LAD": "56.1% Stenotic",
+        "LCX": "42.1% Normal",
+        "RCA": "34.8% Normal"
+      },
+      "hypothetical_inputs_changed": {
+        "Typical Chest Pain": [
+          0,
+          1
+        ],
+        "Atypical": [
+          "Y",
+          "N"
+        ]
+      },
+      "label": "Hypothetical variation of the public development example; not a real patient, intervention or causal effect."
+    },
+    {
+      "path": "docs/submission/assets/v2/explanation-CAD-hypothetical.png",
+      "sha256": "79e4279ac8eefacf4ac11f8ff3ae49c025cc2275e7ea4e9a1ec9fe7df0549327",
+      "captured_at_utc": "2026-10-12T14:11:51.210Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".explanation",
+      "state": "Hypothetical variation; CAD explanation",
+      "outputs": {
+        "CAD": "64.5% CAD",
+        "LAD": "56.1% Stenotic",
+        "LCX": "42.1% Normal",
+        "RCA": "34.8% Normal"
+      },
+      "hypothetical_inputs_changed": {
+        "Typical Chest Pain": [
+          0,
+          1
+        ],
+        "Atypical": [
+          "Y",
+          "N"
+        ]
+      },
+      "label": "Hypothetical variation of the public development example; not a real patient, intervention or causal effect."
+    },
+    {
+      "path": "docs/submission/assets/v2/overview-hypothetical.png",
+      "sha256": "dca4007c063417260fc13e0bab99b72e6d153471962a690f49e3702eadce94ad",
+      "captured_at_utc": "2026-10-12T14:11:54.448Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": "viewport",
+      "state": "Hypothetical variation; top of Prediction page",
+      "outputs": {
+        "CAD": "64.5% CAD",
+        "LAD": "56.1% Stenotic",
+        "LCX": "42.1% Normal",
+        "RCA": "34.8% Normal"
+      },
+      "hypothetical_inputs_changed": {
+        "Typical Chest Pain": [
+          0,
+          1
+        ],
+        "Atypical": [
+          "Y",
+          "N"
+        ]
+      },
+      "label": "Hypothetical variation of the public development example; not a real patient, intervention or causal effect."
+    },
+    {
+      "path": "docs/submission/assets/v2/evidence-overview.png",
+      "sha256": "763be90caa92be56205dbe3f846a2f463eba6bad4eb6661799148b8635059f64",
+      "captured_at_utc": "2026-10-12T14:11:57.764Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": "viewport",
+      "state": "Evidence page top; saved aggregate V1 evidence only",
+      "note": "Evidence displays saved aggregate V1 results only; no inference."
+    },
+    {
+      "path": "docs/submission/assets/v2/evidence-glance.png",
+      "sha256": "f71d19da2d3857d77a3efb21da3bb80d37d67d5032037deb87f48ae125d121e2",
+      "captured_at_utc": "2026-10-12T14:11:58.236Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".evidence-chart",
+      "state": "Evidence chart: ROC-AUC and recall with saved 95% intervals",
+      "note": "Evidence displays saved aggregate V1 results only; no inference."
+    },
+    {
+      "path": "docs/submission/assets/v2/mobile-anatomy.png",
+      "sha256": "890bdfcc15d7f5d520221eef75e5385e69e110672d5aac8873364437185e77df",
+      "captured_at_utc": "2026-10-12T14:12:05.267Z",
+      "viewport_css_pixels": [
+        390,
+        844
+      ],
+      "device_scale_factor": 3,
+      "element": "viewport",
+      "state": "Mobile 390x844; unedited public example; anatomy panel in viewport",
+      "outputs": {
+        "CAD": "17.1% Normal",
+        "LAD": "24.3% Normal",
+        "LCX": "37.1% Normal",
+        "RCA": "30.9% Normal"
+      }
+    },
+    {
+      "path": "docs/submission/assets/v2/report-stage-LAD-selected.png",
+      "sha256": "05a3ff5ab2e6809463e213913abf90ecbe56730add6bf3ff5d8c5fd18fcd512b",
+      "captured_at_utc": "2026-10-12T14:14:27.351Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".anatomy-stage",
+      "state": "Unedited public example; LAD selected; toolbar and 3D stage",
+      "outputs": {
+        "CAD": "17.1% Normal",
+        "LAD": "24.3% Normal",
+        "LCX": "37.1% Normal",
+        "RCA": "30.9% Normal"
+      }
+    },
+    {
+      "path": "docs/submission/assets/v2/report-canvas-example.png",
+      "sha256": "f79c8fa32d342dcd8bc196a8472f4a28ffaaf25ca3552c0a638362d6cd22f3cf",
+      "captured_at_utc": "2026-10-12T14:14:31.506Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".anatomy-canvas",
+      "state": "Unedited public example; anterior view; no selection",
+      "outputs": {
+        "CAD": "17.1% Normal",
+        "LAD": "24.3% Normal",
+        "LCX": "37.1% Normal",
+        "RCA": "30.9% Normal"
+      }
+    },
+    {
+      "path": "docs/submission/assets/v2/report-cards-example.png",
+      "sha256": "995457dd6c339524213834b7206872046a403af4291aa4bbd73161e2e5be4831",
+      "captured_at_utc": "2026-10-12T14:14:32.991Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".result-grid",
+      "state": "Unedited public example; four output cards",
+      "outputs": {
+        "CAD": "17.1% Normal",
+        "LAD": "24.3% Normal",
+        "LCX": "37.1% Normal",
+        "RCA": "30.9% Normal"
+      }
+    },
+    {
+      "path": "docs/submission/assets/v2/report-canvas-hypothetical.png",
+      "sha256": "4b61b98e7fa1a39b26c810613f8b51491c942024996d62460d3cccc72b14f3f1",
+      "captured_at_utc": "2026-10-12T14:14:38.963Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".anatomy-canvas",
+      "state": "Hypothetical variation (Typical Chest Pain 0 -> 1, Atypical Y -> N); anterior view; no selection",
+      "outputs": {
+        "CAD": "64.5% CAD",
+        "LAD": "56.1% Stenotic",
+        "LCX": "42.1% Normal",
+        "RCA": "34.8% Normal"
+      }
+    },
+    {
+      "path": "docs/submission/assets/v2/report-cards-hypothetical.png",
+      "sha256": "797ea44b39da396717b7cda4b81903da9783c4973ad132525a1378eaa0edac3f",
+      "captured_at_utc": "2026-10-12T14:14:40.413Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "device_scale_factor": 2,
+      "element": ".result-grid",
+      "state": "Hypothetical variation; four output cards with unedited-example comparison",
+      "outputs": {
+        "CAD": "64.5% CAD",
+        "LAD": "56.1% Stenotic",
+        "LCX": "42.1% Normal",
+        "RCA": "34.8% Normal"
+      }
+    },
+    {
+      "path": "docs/submission/assets/v2/report-factors-CAD-example.png",
+      "sha256": "aedd2c85f12f0c2b0a1b34b068d0ea34bc4e0d16550e6bb336fed75dfeb79fba",
+      "captured_at_utc": "2026-10-12T14:14:46.994Z",
+      "viewport_css_pixels": [
+        1180,
+        900
+      ],
+      "device_scale_factor": 2,
+      "element": ".factor-columns",
+      "state": "Unedited public example; CAD explanation factor columns",
+      "outputs": {
+        "CAD": "17.1% Normal",
+        "LAD": "24.3% Normal",
+        "LCX": "37.1% Normal",
+        "RCA": "30.9% Normal"
+      }
+    }
+  ],
+  "public_example_source_id": "0056fb5ae87a9ac1510fd77cb5cd6bd3b348a0d0de578cf1a86132f8d87733dc",
+  "scientific_scope": "Frozen V1 inference only; no fitting, threshold change, holdout inference or SHAP change. Screenshots are unedited captures.",
+  "baseline_records": [
+    {
+      "path": "docs/submission/assets/v2/baseline-v1-overview.png",
+      "sha256": "f4b0b1963452c335a86bcd300cbfe59aa65b0d5e7b4b1978a555e804eba6934a",
+      "captured_approx_utc": "2026-10-12T13:35Z",
+      "state": "Pre-redesign V1 UI (same frozen models) on the Vite dev server, public example after prediction; 1440x1000 @2x"
+    },
+    {
+      "path": "docs/submission/assets/v2/baseline-v1-anatomy.png",
+      "sha256": "90cc306370958d0f3a59d816a8d6f3c5e746bf81e1450c4ab2eb191788438d66",
+      "captured_approx_utc": "2026-10-12T13:35Z",
+      "state": "Pre-redesign V1 anatomy panel, public example; element capture @2x"
+    },
+    {
+      "path": "docs/submission/assets/v2/baseline-v1-explanation.png",
+      "sha256": "056406142bd006200cc06b4b12e0cddfcb201f84e1ca89a878f911bd918559ee",
+      "captured_approx_utc": "2026-10-12T13:35Z",
+      "state": "Pre-redesign V1 CAD explanation, public example; element capture @2x"
+    }
+  ]
+}

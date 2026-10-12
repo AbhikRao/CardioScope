@@ -23,3 +23,15 @@ The new [full posterior capture](assets/anatomy-posterior-LCX.jpg) is a real JPE
 Their dimensions, checksums and capture timestamps are in [SCREENSHOT_PROVENANCE.json](SCREENSHOT_PROVENANCE.json). The source example and expected outputs are recorded in [rehearsal instructions](DEMO_REHEARSAL.md) and match the preserved macOS smoke record. The original Phase 7 overview/full-page and hardening browser captures remain untouched; the cleaner new captures avoid browser chrome and fit the submission layout.
 
 Read captions with every image: this is reference anatomy, and the example's model outputs are not clinical validation. No new model training or holdout inference was involved in capture. Temporary viewport override was reset after capture.
+
+## Design-update captures (12 October 2026)
+
+The current README, report and Devpost gallery use real captures of the **design-update production build**, stored in [assets/v2/](assets/v2/). They show the same frozen V1 models with only the public development example and one hypothetical edit of it, which is labeled as such in the UI. The provenance file [assets/v2/provenance.json](assets/v2/provenance.json) records, for every image:
+
+- SHA-256 hash
+- viewport and device scale
+- element captured
+- visible state
+- the four displayed outputs
+
+The report build verifies those hashes. The images were captured with Playwright Chromium 151 (headless, SwiftShader WebGL) at 1440 × 1000 CSS px, ×2, plus one mobile capture at 390 × 844, ×3. The earlier captures listed above are kept as historical records of the v1 interface and their hashes are unchanged. See [DESIGN_UPDATE.md](DESIGN_UPDATE.md) for before/after comparisons.

@@ -43,14 +43,25 @@ it('contains module errors without claiming anatomy loaded or dropping numerical
   expect(screen.getByRole('alert').textContent).toContain('has not loaded successfully');
   expect(screen.getByText('Numerical outputs remain here')).toBeTruthy();
 });
-it('preserves the original Three color outputs across a dense probability grid', async () => {
-  const { Color } = await import('three');
-  const { probabilityColor } = await import('../anatomy/contract');
-  for (let i = 0; i <= 1000; i++) {
-    const p = i / 1000;
-    const expected = new Color('#3182bd').lerp(new Color('#d64b3b'), p).getStyle();
-    // Same upstream Color implementation and frozen v1 endpoints/interpolation.
-    const actual = probabilityColor(p);
-    expect(actual).toBe(expected);
+it('maps probability to a continuous, distinguishable display scale with the threshold at gold', async () => {
+  const { probabilityColor, probabilityGradient, PROBABILITY_STOPS, rgbToOklab } = await import('../anatomy/contract');
+  const rgb = (p: number) => probabilityColor(p).match(/\d+/g)!.map(Number);
+  const hex = (h: string) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  // Stops are reproduced exactly (within 8-bit rounding), including 0.5 = gold threshold.
+  for (const [at, color] of PROBABILITY_STOPS) rgb(at).forEach((v, i) => expect(Math.abs(v - hex(color)[i])).toBeLessThanOrEqual(1));
+  expect(PROBABILITY_STOPS.find(([at]) => at === 0.5)?.[1]).toBe('#dcae37');
+  // Continuous: a 0.001 probability step never jumps more than a few 8-bit levels.
+  for (let i = 0; i < 1000; i++) {
+    const a = rgb(i / 1000), b = rgb((i + 1) / 1000);
+    expect(Math.max(...a.map((v, k) => Math.abs(v - b[k])))).toBeLessThanOrEqual(3);
   }
+  // Distinguishable: outputs 0.05 apart always differ perceptually (OKLab distance). The v1
+  // constant-lightness blue-red blend measured 0.013-0.017 per step; this scale stays above 0.02 everywhere.
+  const lab = (p: number) => rgbToOklab(rgb(p) as [number, number, number]);
+  for (let i = 0; i <= 95; i++) {
+    const a = lab(i / 100), b = lab((i + 5) / 100);
+    expect(Math.hypot(...a.map((v, k) => v - b[k]))).toBeGreaterThan(0.02);
+  }
+  expect(probabilityGradient()).toContain(probabilityColor(0.5));
+  for (const bad of [-0.01, 1.01, NaN, Infinity]) expect(() => probabilityColor(bad)).toThrow('Probability');
 });

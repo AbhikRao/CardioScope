@@ -62,7 +62,7 @@ Use frozen V1 final results as primary evidence. V2/V2.1 are post-holdout develo
 
 **30. What runs offline?** After installation/build, bundled models, mesh files, SHAP reference and saved evidence are served locally. No cloud AI API or external CDN is required for inference. Package/container installation and opening upstream links require network.
 
-**31. Is it reproducible?** Frozen model/source/configuration hashes, exact scientific packages, shared split, deterministic SHAP reference, Docker and documented checks support reproduction. Hardened V1 passed 134 Python and 75 frontend tests on macOS ARM64 and clean Ubuntu ARM64. Hosted GitHub Actions has not yet run; its workflow is prepared and locally validated.
+**31. Is it reproducible?** Frozen model/source/configuration hashes, exact scientific packages, shared split, deterministic SHAP reference, Docker and documented checks support reproduction. Hosted GitHub Actions passed for the published `main` and `v1.0.0` commits on 4 October 2026: 134 Python tests, 75 frontend tests, the frozen-model/SHAP smoke test, and all 256 protected files byte-identical (runs 37225107078 / 37225107079). The same suites passed on macOS ARM64 and clean Ubuntu ARM64.
 
 **32. What is needed before clinical use?** Independently collected representative data, verified patient identity/grouping, prospective external validation, calibration and operating-threshold assessment, expert review and appropriate deployment/security/governance work. Current screenshots and same-source holdout results do not establish that readiness.
 
@@ -72,7 +72,7 @@ Use frozen V1 final results as primary evidence. V2/V2.1 are post-holdout develo
 
 **35. Which results should we judge as the product's performance?** The frozen V1 once-only 61-record holdout: CAD/LAD ROC-AUC 0.9134/0.8474; LCX/RCA 0.6723/0.6976. All four targets, recalls, matrices and limits are reported. Research CV values are explicitly separate.
 
-**36. Is the repository already published or licensed?** The owner selected MIT for project code; upstream dataset/anatomy/dependency terms remain separate. This is a clean public snapshot with fresh history and all seven organizer PDFs excluded. The archival repository remains preserved. Publication status is recorded in the README; video and Devpost submission are separate user tasks.
+**36. Is the repository already published or licensed?** The owner selected MIT for project code; upstream dataset/anatomy/dependency terms remain separate. This is a clean public snapshot with fresh history and all seven organizer PDFs excluded. The archival repository remains preserved. The code and `v1.0.0` tag are published at github.com/AbhikRao/CardioScope and hosted CI passed; video and Devpost submission are separate user tasks.
 
 **37. What does 3D add beyond three vessel probability bars?** Spatial orientation of the named arteries, linked numerical/anatomical inspection and selection from either a card or geometry. We have not measured improved comprehension or clinical outcomes.
 
@@ -87,5 +87,11 @@ Use frozen V1 final results as primary evidence. V2/V2.1 are post-holdout develo
 **42. Does exact SHAP reconstruction mean the explanation is clinically correct?** No. It verifies numerical consistency with the model. It does not establish causality, stability under correlated features or clinical validity.
 
 **43. Why should the 61-record holdout generalize?** It does not establish external generalization. It is a prespecified same-source holdout only; a new independent cohort would be needed to assess broader performance.
+
+**44. Why did the color scale change in the design update?** The v1 blend from blue to red kept lightness constant, so outputs between about 17% and 56% looked nearly identical. The new scale is continuous and interpolated in OKLab (blue → teal → gold at 0.5 → orange → red). Every 0.05 step is now a perceptible color difference, and a test enforces this. It changes only the display: probabilities, thresholds and classes are untouched, and one function drives the geometry, cards and legend.
+
+**45. Isn't the what-if edit just cherry-picking?** It is labeled in the app as a hypothetical variation of the public example, not a new patient, intervention or causal effect. We kept the example selection rule (smallest development ID, chosen without looking at outcomes) and added no high-risk example. The edit shows integration: two input changes (Typical Chest Pain 0→1, Atypical Y→N) re-run frozen inference and updates the probabilities, classes, anatomy colors and SHAP together. Typical Chest Pain was chosen because SHAP named it as the largest factor for that example. LCX/RCA barely move, which matches their weak holdout sensitivity.
+
+**46. Where do the readable feature names come from?** From published descriptions of the Z-Alizadeh Sani feature table (docs/FEATURE_LABELS.md). Ambiguous codes (Atypical, Length, CR) stay as they are, no units are added, and the source code remains the model input and accessible form label.
 
 Research metric summaries, wherever quoted, are **unweighted outer-fold means**, separate from V1 final-holdout evidence. V2 uses 25 folds per vessel; V2.1 has 24 eligible LCX folds and 25 RCA folds. Both studies are post-holdout, development-only, without independent validation or deployment.

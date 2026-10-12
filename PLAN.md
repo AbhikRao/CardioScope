@@ -1,5 +1,7 @@
 # CardioScope: Track A build and submission plan
 
+> **Status note (12 October 2026):** this is the original build plan, kept as a historical record. Statements such as "remain unfinished" describe earlier milestones. The application, final evaluation, report and public repository are complete, and hosted CI passed. The [README](README.md) describes the current product.
+
 **Decision:** Enter **Track A - Cardiovascular Risk Visualization & Prediction**.
 
 **Product:** CardioScope, an interactive coronary-risk explorer combining trained classifiers, a real 3D heart, vessel-specific predictions, and explanations backed by reproducible evaluation.

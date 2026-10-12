@@ -1,19 +1,20 @@
 # Final Track A submission checklist
 
-Prepared package only. Nothing has been published or submitted. Items checked below denote prepared local artifacts; manual actions remain unchecked.
+The repository and `v1.0.0` are published; the video and Devpost submission are not done yet. Checked items are complete; manual actions remain unchecked. Updated 12 October 2026.
 
 ## Release decisions and public source
 
 - [x] Owner selected MIT; root LICENSE uses Copyright (c) 2026 CardioScope contributors. Third-party licenses remain separate.
 - [x] Separate fresh-history public export omits all seven organizer PDFs; original archive/history preserved.
 - [x] Owner authorized publication; created **public** [AbhikRao/CardioScope](https://github.com/AbhikRao/CardioScope).
-- [ ] Push reviewed export: blocked because current OAuth token lacks `workflow` scope. Reauthorize using the recorded resume commands; retain the CI workflow.
+- [x] Push reviewed export, workflow included (the earlier OAuth `workflow`-scope block was resolved).
+- [ ] Design update (`design/judge-experience`): review, then push/merge only after approval; confirm its own hosted CI run passes.
 - [ ] Verify visibility logged-out/incognito, clone the public repository into a clean directory, and follow README setup.
 - [x] Judge landing README prepared with setup, honest all-target V1 metrics, anatomy/explanation limits and research boundary.
 - [x] Existing trained V1 weights, schema/split/search, SHAP background/config/lock and 83 anatomy leaves retained.
 - [x] Reproducibility and Docker instructions prepared; historical macOS/Ubuntu validation is linked.
-- [ ] Run/check hosted GitHub Actions after publication. Until then: "workflow prepared and validated through equivalent local Ubuntu checks."
-- [x] README/Devpost contain the real GitHub URL and its current push-blocked status.
+- [x] Hosted GitHub Actions passed: `main` run 37225107078 and `v1.0.0` run 37225107079 (134 Python + 75 frontend tests, smoke test, 256 protected files).
+- [x] README/Devpost contain the real GitHub URL and the hosted CI result (push-blocked wording removed 12 October 2026).
 
 ## Report, demo and Devpost
 
@@ -26,7 +27,7 @@ Prepared package only. Nothing has been published or submitted. Items checked be
 - [ ] Approve YouTube upload; upload **public or unlisted**, never private. Open logged-out and verify playback/audio/subtitles.
 - [ ] Replace the pending YouTube URL in README/Devpost with the final video URL.
 - [x] Devpost-ready copy prepared, with LCX/RCA weakness, same-source holdout and research-only status explicit.
-- [x] Real public-example screenshot gallery selected: hero, anatomy, CAD explanation, RCA explanation and evidence.
+- [x] Real public-example screenshot gallery selected from production-build design-update captures in `docs/submission/assets/v2/` (see DEVPOST gallery order); the hypothetical-edit image must keep its label.
 - [ ] Create/update Devpost project manually after approval; choose Track A and paste the prepared copy.
 - [ ] Add **both teammates using their real full names**, each with a Devpost account and membership on the project. No names were invented in this package.
 - [ ] Add public GitHub URL, YouTube URL, final report attachment/link and real screenshots. Verify organizer upload fields accept the report format; exact attachment fields are not specified in the supplied PDFs.

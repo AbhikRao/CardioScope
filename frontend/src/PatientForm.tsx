@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import type { FeatureManifest } from './api';
+import { featureLabel } from './featureLabels';
 import { fieldGroup, FORM_GROUPS, parseProfile } from './profile';
 import type { FormValues } from './profile';
 
-export function PatientForm({ schema, values, onChange }: {
+export function PatientForm({ schema, values, onChange, changed = [] }: {
   schema: FeatureManifest; values: FormValues; onChange: (name: string, value: string) => void;
+  changed?: readonly string[];
 }) {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const { errors } = parseProfile(values, schema);
@@ -28,12 +30,14 @@ export function PatientForm({ schema, values, onChange }: {
     <div className="profile-fields">{FORM_GROUPS.map((group, i) => <fieldset key={group} id={`profile-group-${i}`}><legend>{group}</legend>
       <div className="field-grid">{schema.features.filter(field => fieldGroup(field.name) === group).map(field => {
         const id = `field-${schema.feature_order.indexOf(field.name)}`, error = touched[field.name] ? errors[field.name] : null;
-        const common = { id, value: values[field.name] ?? '', required: true,
+        const hint = featureLabel(field.name);
+        const common = { id, value: values[field.name] ?? '', required: true, className: changed.includes(field.name) ? 'changed' : undefined,
           'aria-invalid': !!error, 'aria-describedby': error ? `${id}-error` : undefined,
           onBlur: () => setTouched(previous => ({ ...previous, [field.name]: true })),
           onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => onChange(field.name, event.target.value) };
         return <div key={field.name}>
           <label htmlFor={id}>{field.name}{field.unit_status === 'verified' && field.unit ? ` (${field.unit})` : ''}</label>
+          <span className="field-hint" aria-hidden="true">{hint ?? ''}</span>
           {field.kind === 'category' ? <select {...common}><option value="">Choose category</option>
             {field.categories?.map(value => <option key={value} value={value}>{value}</option>)}</select>
             : <input {...common} type="text" inputMode={field.kind === 'integer' ? 'numeric' : 'decimal'} />}

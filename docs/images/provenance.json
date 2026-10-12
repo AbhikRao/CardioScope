@@ -4,24 +4,6 @@
   "build": "production frontend/dist served by backend.app",
   "records": [
     {
-      "path": "docs/images/explanation-CAD-example.png",
-      "sha256": "b24284732e0ae8ac7261a3993568f86c1d809cdc75e6c24eb9560e2d481e6c3e",
-      "captured_at_utc": "2026-10-12T18:34:59.056Z",
-      "viewport_css_pixels": [
-        1440,
-        1000
-      ],
-      "device_scale_factor": 2,
-      "element": ".explanation",
-      "state": "Unedited public example; CAD explanation",
-      "outputs": {
-        "CAD": "17.1% Normal",
-        "LAD": "24.3% Normal",
-        "LCX": "37.1% Normal",
-        "RCA": "30.9% Normal"
-      }
-    },
-    {
       "path": "docs/images/evidence-glance.png",
       "sha256": "84d03d683805afa2a09f576bb8791872203ace076d27e7879dda001015c13f59",
       "captured_at_utc": "2026-10-12T18:35:12.330Z",

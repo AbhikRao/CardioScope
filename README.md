@@ -1,6 +1,6 @@
 # CardioScope
 
-**Coronary models, made visible.** A Track A educational prototype connecting four frozen classifiers, real 3D reference anatomy, model explanations, and transparent evidence.
+**Coronary models, made visible.** Click an artery on a real 3D heart and see its frozen-model output, the factors behind it, and the evidence for that model. A Track A educational prototype connecting four frozen classifiers, BodyParts3D reference anatomy, verified SHAP explanations and transparent evidence.
 
 **55 predictors · 4 separately trained outputs · 83 verified anatomy meshes · 61-record prespecified same-source holdout**
 
@@ -11,11 +11,20 @@
 | LCX | 0.672 | 0.208 |
 | RCA | 0.698 | 0.286 |
 
-Models were frozen before the holdout was evaluated once. CAD/LAD performed better; **LCX/RCA missed many positives**. These small same-source results do not establish external clinical validation. [Six-page report](output/pdf/CardioScope-Track-A-Report.pdf) · [Demo storyboard](docs/submission/DEMO_SCRIPT.md)
+Models were frozen before the holdout was evaluated once. CAD/LAD performed better; **LCX/RCA missed many positives**. These small same-source results do not establish external clinical validation. **Hosted GitHub Actions passed** ([main](https://github.com/AbhikRao/CardioScope/actions/runs/37225107078), [v1.0.0](https://github.com/AbhikRao/CardioScope/actions/runs/37225107079)). [Six-page report](output/pdf/CardioScope-Track-A-Report.pdf)
 
-![Real CardioScope V1: public development example, vessel outputs and selected LAD reference anatomy](docs/submission/assets/product-hero.png)
+![CardioScope: public development example, LAD selected on the BodyParts3D heart; whole arteries colored by model-estimated probability](docs/submission/assets/v2/report-stage-LAD-selected.png)
 
-*Real application capture. Whole-vessel colors encode model-estimated probabilities, not lesion locations or measured narrowing.*
+*Real production-build capture of the public development example. Clicking an artery selects its card and explanation; whole-vessel colors encode model-estimated probability (gold = 0.5 threshold), not lesion locations or measured narrowing.*
+
+### Two hypothetical input changes, the whole system updates
+
+| Public development example | Hypothetical edit: `Typical Chest Pain` 0→1, `Atypical` Y→N |
+|---|---|
+| ![Unedited example on the heart](docs/submission/assets/v2/report-canvas-example.png) | ![Hypothetical edit on the heart](docs/submission/assets/v2/report-canvas-hypothetical.png) |
+| CAD 17.1% · LAD 24.3% · LCX 37.1% · RCA 30.9% (all Normal) | CAD **64.5% (CAD)** · LAD **56.1% (Stenotic)** · LCX 42.1% · RCA 34.8% |
+
+*Frozen V1 inference in the running app. The edit is labeled in the UI as a hypothetical variation, not a real patient, intervention or causal effect. LCX/RCA barely respond, consistent with their weak holdout sensitivity.*
 
 ## The problem
 
@@ -27,8 +36,10 @@ Enter a complete **55-feature structured profile**, or load the explicitly label
 
 - Validated inputs with exact source categories; no hidden defaults, inferred units, or imputation.
 - Four frozen pipelines, model-estimated probabilities and fixed **0.5** threshold classes.
-- Interactive BodyParts3D heart and coronary groups: selection, rotation, zoom, isolation and view presets.
-- Positive-class SHAP explanations linked to entered values and all 55 source features.
+- Interactive BodyParts3D heart and coronary groups: click-to-select on the mesh, animated anterior/posterior presets, rotation, zoom and isolation. Selecting an artery also switches the explanation target.
+- A continuous probability color scale (blue → teal → **gold at 0.5** → orange → red) shared by geometry, cards and legend, with legend markers showing where each vessel sits.
+- Clearly labeled hypothetical edits of the public example, with the unedited example's frozen outputs shown for comparison.
+- Positive-class SHAP explanations linked to entered values and all 55 source features, with [documented readable names](docs/FEATURE_LABELS.md) for source abbreviations (for example FH → Family history).
 - Saved Evidence dashboard with final metrics, confusion matrices, uncertainty and limitations.
 - Integrity-checked artifacts, locked environments, Docker and reproducible verification.
 
@@ -55,7 +66,9 @@ CAD and LAD performed substantially better. LCX/RCA retained moderate ranking ab
 
 ## Interactive reference anatomy
 
-**83 verified BodyParts3D mesh leaves:** heart base 30, LAD 18, LCX 6, RCA 29. All groups retain one shared coordinate system and one assembly transform; coronary meshes are excluded from the heart base to prevent duplication. Clicking a mesh selects its card; card/control selection highlights the same group. Orbit, zoom, reset, anterior/posterior presets, isolation and show-all are available.
+**83 verified BodyParts3D mesh leaves:** heart base 30, LAD 18, LCX 6, RCA 29. All groups share one coordinate system and one assembly transform; coronary meshes are excluded from the heart base so nothing is duplicated. Clicking a mesh selects its card and explanation, and selecting a card highlights the same group. While a vessel is selected it glows in its own probability color and the other vessels fade. Orbit, zoom, reset, animated anterior/posterior presets, isolation and show-all are available.
+
+The probability scale is interpolated in OKLab so that nearby outputs stay distinguishable. The earlier v1 blue-red blend kept lightness constant, which made 17% and 56% look almost the same. The scale is display-only, and probabilities, thresholds and classes are unchanged.
 
 This is **reference anatomy**, not a patient reconstruction, lesion localization, vessel-diameter estimate or simulated stenosis geometry. Colors represent whole-vessel model output magnitude. [Anatomy verification](docs/anatomy/VERIFICATION.md).
 
@@ -103,9 +116,7 @@ docker run --rm --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-pr
 
 ## Reproducibility, testing and CI
 
-The hardened V1 passed **134 Python tests and 75 frontend tests** on macOS ARM64 and clean Ubuntu ARM64, with locked runtime checks, frozen-output/SHAP reconstruction, browser checks and **256 protected-file hashes**. Initial uncompressed JS decreased by about **78%** through lazy loading; total viewer assets were not similarly reduced. Desktop Chromium, Firefox and Safari workflows were verified; no physical-device or Linux graphical-browser certification is claimed.
-
-**GitHub Actions workflow prepared and locally verified. Hosted CI has not run: GitHub rejected the initial push because the current OAuth token lacks `workflow` scope.** [Hardening evidence](docs/HARDENING.md), [CI configuration](.github/workflows/ci.yml), [submission claim audit](docs/submission/CLAIM_AUDIT.md).
+**Hosted GitHub Actions passed** on GitHub's `ubuntu-24.04` runners on 4 October 2026 for the published `main` commit ([run 37225107078](https://github.com/AbhikRao/CardioScope/actions/runs/37225107078)) and the `v1.0.0` tag ([run 37225107079](https://github.com/AbhikRao/CardioScope/actions/runs/37225107079)). Both runs passed **134 Python tests and 75 frontend tests**, lint/type/build checks, the frozen-model and SHAP smoke test, and confirmed that all **256 protected files** are byte-identical. Earlier, the same suites passed on macOS ARM64 and clean Ubuntu ARM64. These hosted results cover the published V1 commits. The later presentation-only design update has local verification only until its own pull-request CI run passes ([design record](docs/submission/DESIGN_UPDATE.md)). Initial uncompressed JS dropped by about **78%** through lazy loading. Desktop Chromium, Firefox and Safari workflows were verified; no physical-device certification is claimed. [Hardening evidence](docs/HARDENING.md), [CI configuration](.github/workflows/ci.yml), [submission claim audit](docs/submission/CLAIM_AUDIT.md).
 
 Safe documentation-phase checks:
 
@@ -115,7 +126,7 @@ make lint verify build
 cd frontend && npm test
 ```
 
-This is the recorded safe submission-phase command: 43 Python tests using `test_api.py` and 75 frontend tests. These do not retrain V1 or repeat the final evaluation. Historical full-suite evidence is distinct from current documentation-phase checks. [Latest polish verification](docs/submission/POLISH_VERIFICATION.json).
+This is the recorded safe submission-phase command: 43 Python tests using `test_api.py` and 75 frontend tests. It does not retrain V1 or repeat the final evaluation. The full suite (134 + 75) is what hosted CI and the earlier hardening runs executed; the smaller command is the documentation-phase check. [Latest polish verification](docs/submission/POLISH_VERIFICATION.json), [design-update verification](docs/submission/DESIGN_UPDATE.md).
 
 ## Project structure
 
@@ -142,7 +153,8 @@ Dataset: [UCI Extension of Z-Alizadeh Sani, DOI 10.24432/C5461K](https://doi.org
 
 - [Six-page Track A PDF](output/pdf/CardioScope-Track-A-Report.pdf) and [editable generation source](docs/submission/report_source.py).
 - [Five-minute demo storyboard](docs/submission/DEMO_SCRIPT.md) and [deterministic rehearsal checklist](docs/submission/DEMO_REHEARSAL.md).
+- [Design update record](docs/submission/DESIGN_UPDATE.md): what changed in the interface, the color-scale rationale, before/after captures and verification.
 - [Devpost-ready copy](docs/submission/DEVPOST.md), [judge Q&A](docs/submission/JUDGE_QA.md), [submission checklist](docs/submission/SUBMISSION_CHECKLIST.md).
-- YouTube demo and Devpost URLs: **not yet provided**. The user will record/upload the demo and complete Devpost separately; no video or submission link is invented.
+- YouTube demo and Devpost URLs: **not yet provided**. They will be added once they exist; no video or submission link is invented.
 
-Public GitHub repository: [AbhikRao/CardioScope](https://github.com/AbhikRao/CardioScope). The repository is public but its initial code push is blocked by missing OAuth `workflow` scope. See [publication status and resume commands](docs/submission/PUBLICATION_RESULT.json).
+Public GitHub repository: [AbhikRao/CardioScope](https://github.com/AbhikRao/CardioScope) (MIT). The code and `v1.0.0` tag are published, and hosted CI passed (see above). [Publication record](docs/submission/PUBLICATION.md).

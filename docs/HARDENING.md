@@ -142,3 +142,7 @@ No engineering blocker remains in the tested macOS ARM64 and Ubuntu ARM64 enviro
 - Physical mobile devices and a Linux GPU/browser remain untested; scoped desktop/responsive evidence does not claim those environments.
 
 Scientific limitations remain those already reported: small same-source data, unverified probability calibration and weak LCX/RCA detection at the frozen threshold. Hardening does not improve or reinterpret predictive performance. Submission/report/video work remains a later phase.
+
+## Hosted CI status (12 October 2026)
+
+*Dated clarification, appended; the record above is preserved as written at the time.* The public push succeeded after the earlier OAuth `workflow`-scope rejection. **Hosted GitHub Actions passed** on 4 October 2026 (`ubuntu-24.04`) for `main` at `c35df12` ([run 37225107078](https://github.com/AbhikRao/CardioScope/actions/runs/37225107078)) and for the `v1.0.0` tag at `53cf720` ([run 37225107079](https://github.com/AbhikRao/CardioScope/actions/runs/37225107079)). Both ran the full `make install prepare lint test build` path (134 Python + 75 frontend tests), the frozen-model/SHAP smoke test, and the protected-file check (256 files byte-identical). The later design update (branch `design/judge-experience`, presentation only) has local verification only until it is pushed and its own hosted run passes; see [DESIGN_UPDATE.md](submission/DESIGN_UPDATE.md).

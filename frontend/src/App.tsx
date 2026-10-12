@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useReducer, useRef, useState } from 'react';
 import { api, TARGETS, validatePrediction } from './api';
 import type { ExampleProfile, FeatureManifest, Health, Prediction } from './api';
-import { NEUTRAL_STATES, probabilityColor, VESSELS } from './anatomy/contract';
+import { LABELS, NEUTRAL_STATES, probabilityColor, probabilityGradient, VESSELS } from './anatomy/contract';
 import { INITIAL_STATE, viewerReducer } from './anatomy/state';
 import { ExplanationPanel } from './ExplanationPanel';
 import type { ApplicationMetadata } from './api';
@@ -11,6 +11,7 @@ import { PatientForm } from './PatientForm';
 import { parseProfile, predictionVessels } from './profile';
 import type { FormValues } from './profile';
 import { ModuleBoundary } from './ModuleBoundary';
+import { displayName } from './featureLabels';
 
 const AnatomyViewer = lazy(() => import('./anatomy/AnatomyViewer').then(module => ({ default: module.AnatomyViewer })));
 const EvidencePage = lazy(() => import('./EvidencePage').then(module => ({ default: module.EvidencePage })));
@@ -25,6 +26,11 @@ export default function App() {
   const [examples, setExamples] = useState<ExampleProfile[]>([]);
   const [values, setValues] = useState<FormValues>({});
   const [exampleLabel, setExampleLabel] = useState<string | null>(null);
+  // The unedited public example and its verified frozen output, kept only to label and compare
+  // clearly marked hypothetical edits. It is never used for training, thresholds or evidence.
+  const [exampleBase, setExampleBase] = useState<{ id: string; values: FormValues } | null>(null);
+  const [reference, setReference] = useState<Prediction | null>(null);
+  const [submittedChanges, setSubmittedChanges] = useState<string[]>([]);
   const [prediction, setPrediction] = useState<Prediction | null>(null);
   const [submitted, setSubmitted] = useState<Record<string, number | string> | null>(null);
   const [explanationTarget, setExplanationTarget] = useState<Target>('CAD');
@@ -74,7 +80,9 @@ export default function App() {
       invalidate('Example could not be loaded.'); setError('Example does not match the verified source schema.'); return;
     }
     invalidate('Development example loaded. Review all values, then run prediction.');
+    if (exampleBase?.id !== example.id) setReference(null);
     setValues(next); setExampleLabel(`${example.label}. Source record: ${example.id}`);
+    setExampleBase({ id: example.id, values: next });
   }
   async function predict() {
     if (!schema) return;
@@ -96,6 +104,9 @@ export default function App() {
           result.schema_version !== schema.schema_version)
         throw new Error('Stale or mismatched profile/model/schema response; no results displayed.');
       dispatch({ type: 'reset' }); setExplanationTarget('CAD');
+      const edits = exampleBase ? changedFields(values, exampleBase.values) : [];
+      if (exampleBase && edits.length === 0) setReference(result);
+      setSubmittedChanges(edits);
       setSubmitted(parsed.features); setPrediction(result); setElapsed(performance.now() - started);
       setNotice('Four model outputs received for the current profile.');
     } catch (reason) {
@@ -123,6 +134,17 @@ export default function App() {
   function navigate(next: 'prediction' | 'evidence') {
     setPage(next); if (next === 'evidence') setEvidenceVisited(true);
   }
+  const pendingChanges = exampleBase ? changedFields(values, exampleBase.values) : [];
+  const comparable = reference && prediction && submittedChanges.length > 0 &&
+    reference.model_version === prediction.model_version && reference.profile_fingerprint !== prediction.profile_fingerprint ? reference : null;
+  const example = examples[0];
+  const steps: [string, boolean][] = [
+    ['Load the public example', !!exampleBase],
+    ['Run frozen inference', !!prediction],
+    ['Click an artery', !!prediction && !!viewer.selected],
+    ['Read the explanation', !!prediction],
+    ['Check the evidence', evidenceVisited],
+  ];
   return <>
     <a className="skip-link" href="#main-content">Skip to main content</a>
     <header className="site-header"><div className="header-inner">
@@ -131,16 +153,18 @@ export default function App() {
         <span><strong>CardioScope</strong><small>Coronary models, made visible</small></span></a>
       <nav aria-label="Main navigation"><button aria-current={page === 'prediction' ? 'page' : undefined} onClick={() => navigate('prediction')}>Prediction</button>
         <button aria-current={page === 'evidence' ? 'page' : undefined} onClick={() => navigate('evidence')}>Evidence</button></nav>
-      <span className="header-label">Research prototype</span>
+      <span className="header-label">Track A research prototype · frozen V1</span>
     </div></header>
     <div className="disclaimer"><span aria-hidden="true">ⓘ</span> Educational and decision-support prototype. Not a substitute for diagnostic imaging.</div>
     <main id="main-content" tabIndex={-1}>
       {setupError && <p role="alert">Application setup unavailable: {setupError}</p>}
       {health && !health.models_loaded && <p role="alert">{health.model_error ?? 'Verified models unavailable.'}</p>}
       <div hidden={page !== 'prediction'} id="prediction-page">
-        <header className="page-heading"><div><span className="eyebrow">Prediction workspace</span><h1>Explore a model output</h1>
-          <p>Enter a complete source profile. Inspect four independent outputs, reference anatomy and the factors behind each model.</p></div>
+        <header className="page-heading hero-heading"><div><span className="eyebrow">Prediction workspace</span><h1>Coronary model outputs, mapped onto real anatomy</h1>
+          <p>Four frozen classifiers estimate overall CAD and LAD, LCX and RCA stenosis from 55 structured inputs. Click an artery to inspect its output and the factors behind it.</p></div>
           <span className="tag">55 inputs · 4 frozen classifiers</span></header>
+        <ol className="step-guide" aria-label="How to explore">{steps.map(([label, done], i) =>
+          <li key={label} className={done ? 'done' : steps.slice(0, i).every(([, d]) => d) ? 'current' : ''}><span aria-hidden="true">{done ? '✓' : i + 1}</span>{label}</li>)}</ol>
         <div className="workflow-note"><strong>Know the limits.</strong> Small public dataset; probabilities are not established as calibrated. LCX/RCA detection was weak at threshold 0.5.
           <button className="text-button" onClick={() => navigate('evidence')}>View evidence and limitations →</button></div>
         <div className="workspace">
@@ -150,7 +174,13 @@ export default function App() {
             <p className="muted">Source conventions are retained. No clinical units or missing values are guessed.</p>
             {examples.map(example => <button className="example-button" key={example.id} onClick={() => loadExample(example)}>Load development example</button>)}
             {exampleLabel && <details className="example-source"><summary>Public dataset example loaded</summary><p>{exampleLabel}</p></details>}
-            {schema && <PatientForm schema={schema} values={values} onChange={change} />}
+            {pendingChanges.length > 0 && <div className="hypothetical-note" role="note">
+              <strong>Hypothetical variation of the public example</strong>
+              <p>Not a real patient, a clinical intervention or a validated causal effect. Changed {pendingChanges.length === 1 ? 'field' : 'fields'}:</p>
+              <ul>{pendingChanges.map(name => <li key={name}><code>{name}</code> {String(exampleBase!.values[name])} → {String(values[name])}</li>)}</ul>
+              {example && <button className="text-button" onClick={() => loadExample(example)}>Restore the unedited example</button>}
+            </div>}
+            {schema && <PatientForm schema={schema} values={values} onChange={change} changed={pendingChanges} />}
             <div className="prediction-action">
               {parsed && <p>{Object.keys(parsed.errors).length === 0 ? 'All 55 fields are valid.' : `${Object.keys(parsed.errors).length} fields require valid input.`}</p>}
               <button className="primary-button" disabled={!health?.models_loaded || !parsed?.valid || busy} onClick={() => void predict()}>{busy ? 'Computing outputs…' : 'Run prediction'}</button>
@@ -161,18 +191,25 @@ export default function App() {
             <section className="panel results-panel" aria-labelledby="results-heading">
               <div className="card-heading"><div><span className="eyebrow">02 / Frozen model outputs</span><h2 id="results-heading">Four independent outputs</h2></div>
                 <span className="tag">Threshold 0.5</span></div>
-              <p className="muted">The four classifiers are independent. Their probabilities do not form a joint distribution; CAD is predicted by its own model.</p>
+              <p className="muted results-intro">The four classifiers are independent. Their probabilities do not form a joint distribution; CAD is predicted by its own model.</p>
               <p role="status" className="prediction-notice">{notice}</p>
               {error && <p role="alert">{error}</p>}
+              {prediction && submittedChanges.length > 0 && <p className="hypothetical-result">Outputs for a <strong>hypothetical variation</strong> of the public example ({submittedChanges.map(displayName).join(', ')} changed){comparable ? '; the unedited example’s frozen outputs are shown for comparison.' : '.'}</p>}
               {prediction ? <>
                 <div className="result-grid">{TARGETS.map(target => {
                   const output = prediction.outputs[target], vessel = target === 'CAD' ? null : target;
-                  return <article key={target} style={vessel ? { borderTop: `3px solid ${probabilityColor(output.probability)}` } : {}}
-                    data-target={target} data-color={vessel ? probabilityColor(output.probability) : ''}
-                    className={`${target === 'CAD' ? 'cad-result' : ''} ${viewer.selected === vessel && vessel ? 'selected-result' : ''}`}>
-                    <div className="card-heading"><h3>{target === 'CAD' ? 'Overall CAD' : target}</h3>{viewer.selected === vessel && vessel && <span className="selection-badge">Selected</span>}</div>
+                  const color = probabilityColor(output.probability), before = comparable?.outputs[target].probability;
+                  return <article key={target} style={vessel ? { borderTopColor: color } : {}}
+                    data-target={target} data-color={vessel ? color : ''}
+                    className={`${target === 'CAD' ? 'cad-result' : 'vessel-result'} ${viewer.selected === vessel && vessel ? 'selected-result' : ''}`}>
+                    <div className="card-heading"><h3><span className="output-code">{target === 'CAD' ? 'Overall CAD' : target}</span>
+                      <span className="output-name">{vessel ? LABELS[vessel] : 'Coronary artery disease'}</span></h3>
+                      {viewer.selected === vessel && vessel && <span className="selection-badge">Selected</span>}</div>
                     <p className="probability-number">Model-estimated probability: <strong>{(output.probability * 100).toFixed(1)}%</strong></p>
-                    <p className="threshold-class">Thresholded class: <strong>{output.status}</strong> (threshold 0.5)</p>
+                    <div className="probability-bar" aria-hidden="true"><span style={{ width: `${output.probability * 100}%`, background: color }} />
+                      {before !== undefined && <b className="before-tick" style={{ left: `${before * 100}%` }} />}<i /></div>
+                    <p className="threshold-class">Thresholded class: <strong className={output.positive ? 'class-pill positive' : 'class-pill'}>{output.status}</strong> (threshold 0.5)</p>
+                    {before !== undefined && <p className="delta">{`Unedited example: ${(before * 100).toFixed(1)}% → ${output.probability >= before ? '+' : '−'}${Math.abs((output.probability - before) * 100).toFixed(1)} pts`}</p>}
                     {vessel && <button aria-pressed={viewer.selected === vessel}
                       onClick={() => viewerAction({ type: 'select', vessel })}>Select {vessel} anatomy</button>}
                     <details className="model-detail"><summary>Frozen model</summary><small>Model: {output.model_id}</small></details>
@@ -191,7 +228,12 @@ export default function App() {
                   viewerState={viewer} onAction={viewerAction} />
               </Suspense>
               </ModuleBoundary>
-              <div className="probability-legend"><strong>{prediction ? 'Model-estimated probability' : 'Probability color scale · inactive until prediction'}</strong>
+              <div className="probability-legend"><div className="legend-head"><strong>{prediction ? 'Model-estimated probability' : 'Probability color scale · inactive until prediction'}</strong>
+                <span>Gold marks the 0.5 threshold</span></div>
+                <div className="legend-bar" aria-hidden="true" style={{ background: probabilityGradient() }}><i className="legend-threshold" />
+                  {prediction && legendMarkers(prediction).map(([vessel, p, raised]) => <b key={vessel}
+                    className={`${viewer.selected === vessel ? 'selected' : ''} ${raised ? 'raised' : ''}`}
+                    style={{ left: `${p * 100}%` }}>{vessel}</b>)}</div>
                 <div className="legend-swatches">{[0, .25, .5, .75, 1].map(p => <span key={p}><i style={{ background: probabilityColor(p) }} />{p * 100}%</span>)}</div>
                 <p>Color represents model-estimated probability, not measured stenosis severity or percent narrowing.</p>
                 <p>Lower model output → higher model output. Entire named vessels are colored; no lesion location is inferred.</p></div>
@@ -209,6 +251,18 @@ export default function App() {
       </ModuleBoundary></div>}
     </main>
     <footer className="site-footer"><strong>CardioScope</strong><span>Public-data research prototype · reference anatomy · frozen evidence</span>
+      <a href="https://github.com/AbhikRao/CardioScope" target="_blank" rel="noreferrer">Source on GitHub</a>
       <a href="/api/model-information" target="_blank" rel="noreferrer">Model information</a></footer>
   </>;
+}
+
+// Legend markers sorted by probability; a marker close to its neighbour is lifted to stay legible.
+function legendMarkers(prediction: Prediction): [typeof VESSELS[number], number, boolean][] {
+  const sorted = VESSELS.map(v => [v, prediction.outputs[v].probability] as const).sort((a, b) => a[1] - b[1]);
+  return sorted.map(([vessel, p], i) => [vessel, p, i > 0 && p - sorted[i - 1][1] < 0.09 && i % 2 === 1]);
+}
+
+// Fields whose entered value differs from the unedited public example, in schema order.
+function changedFields(values: FormValues, base: FormValues): string[] {
+  return Object.keys(base).filter(name => values[name] !== base[name]);
 }

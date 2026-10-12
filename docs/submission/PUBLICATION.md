@@ -62,3 +62,7 @@ MIT selection and the separate-export route are owner-approved. Video recording/
 ## Current GitHub publication status
 
 [AbhikRao/CardioScope](https://github.com/AbhikRao/CardioScope) was created as a public repository. GitHub rejected the initial `main` push because the current OAuth token lacks `workflow` scope. No code/tag is pushed yet, and Actions has no run. [PUBLICATION_RESULT.json](PUBLICATION_RESULT.json) records safe verification, exact local commit/tag, the permission blocker and resume commands. No credential workaround, workflow removal, force-push or history rewrite was attempted.
+
+## Current status (12 October 2026)
+
+*Dated clarification, appended; the record above is preserved as written at the time.* The public push succeeded after the earlier OAuth `workflow`-scope rejection. **Hosted GitHub Actions passed** on 4 October 2026 (`ubuntu-24.04`) for `main` at `c35df12` ([run 37225107078](https://github.com/AbhikRao/CardioScope/actions/runs/37225107078)) and for the `v1.0.0` tag at `53cf720` ([run 37225107079](https://github.com/AbhikRao/CardioScope/actions/runs/37225107079)). Both ran the full `make install prepare lint test build` path (134 Python + 75 frontend tests), the frozen-model/SHAP smoke test, and the protected-file check (256 files byte-identical). The later design update (branch `design/judge-experience`, presentation only) has local verification only until it is pushed and its own hosted run passes; see [DESIGN_UPDATE.md](DESIGN_UPDATE.md).

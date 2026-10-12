@@ -1,5 +1,5 @@
 {
-  "recorded_at_utc": "2026-10-12T14:22:37.669861+00:00",
+  "recorded_at_utc": "2026-10-12T18:36:07.713624+00:00",
   "branch": "design/judge-experience",
   "base_commit": "c35df12a53ea8510e67681c7a2da68d69ec5886b",
   "scope": "Presentation only: frontend layout, labels, color scale, explanation/evidence presentation, judge-facing documents, report and screenshots. No model, threshold, prediction, evaluation, SHAP, anatomy-mapping, mesh or backend change.",
@@ -23,7 +23,7 @@
     "report": {
       "path": "output/pdf/CardioScope-Track-A-Report.pdf",
       "pages": 6,
-      "sha256": "2fe0ac69ab31364eff46e96b2e6d7f6761f90c79094ae914fa449ed2c27e95d5",
+      "sha256": "e39beeeafa704d4d70c6dacd905294ea2850f94418218d16aacb50dacf89cea4",
       "renderer": "ReportLab 4.4.9 / Pillow 12.3.0 / pypdf 6.10.0 in .runtime/submission-report; pages rendered with pypdfium2 and reviewed visually",
       "asserts": "v2 screenshot SHA-256 values and page-4 numbers equal captured UI outputs"
     },
@@ -61,5 +61,16 @@
     },
     "date": "2026-10-04",
     "result": "134 Python + 75 frontend tests, smoke, 256 protected files byte-identical"
+  },
+  "release_check_13_october": {
+    "contrast": "Secondary text token --soft darkened #7b8b8d (3.55:1) -> #5f7073 (5.18:1 on white, 4.86:1 on #f6f8f8, 4.74:1 on #f3f5f5); all new text pairs >= 4.5:1 except disabled buttons (WCAG-exempt).",
+    "color_scale_labeling": "Legend and anatomy text identify color as model-estimated probability, not measured stenosis severity or percent narrowing.",
+    "screenshots": "All 17 v2 captures re-taken from the final production build after the contrast fix; report rebuilt (6 pages) and hash-checked.",
+    "demo": "Script describes two hypothetical input changes (Typical Chest Pain 0->1, Atypical Y->N); retimed to ~4:30 with ~3:11 narration at 130 wpm; timed action dry run completes all UI steps in ~8 s.",
+    "browsers": {
+      "chromium": "passed (in-app pane and Playwright Chromium 151)",
+      "safari_27_2": "not run: WebDriver requires 'Allow remote automation' in Safari settings, which was not changed",
+      "firefox": "not installed"
+    }
   }
 }

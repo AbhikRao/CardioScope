@@ -5,8 +5,8 @@
   "records": [
     {
       "path": "docs/submission/assets/v2/overview.png",
-      "sha256": "cf60ec794093cb58d5a2b6854081369520fff48e378ab95773d552e2e181b430",
-      "captured_at_utc": "2026-10-12T14:09:45.602Z",
+      "sha256": "168d88e6ec17a6d390daab890b959e2a0a4c45f18ff027c8af9028ecc6115e17",
+      "captured_at_utc": "2026-10-12T18:34:21.572Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -24,7 +24,7 @@
     {
       "path": "docs/submission/assets/v2/outputs-anatomy-example.png",
       "sha256": "cef66b905ead73a41e6cc05bd844493381258393d63a3aa2c30e830cbf6bd61c",
-      "captured_at_utc": "2026-10-12T14:09:56.153Z",
+      "captured_at_utc": "2026-10-12T18:34:27.363Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -41,8 +41,8 @@
     },
     {
       "path": "docs/submission/assets/v2/anatomy-LAD-selected.png",
-      "sha256": "5f77d8791d1bf57b1f860834f2271fe6df38314ca1851071d64e68d6a114e823",
-      "captured_at_utc": "2026-10-12T14:11:24.665Z",
+      "sha256": "c6eb9f77b0a68ab14adb3314f0cb155777d0591e7dbf4c9c0cf40ea2478730d5",
+      "captured_at_utc": "2026-10-12T18:34:57.284Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -59,8 +59,8 @@
     },
     {
       "path": "docs/submission/assets/v2/explanation-CAD-example.png",
-      "sha256": "3fcd0ce787bfb6b03b1f22b7dc92e84bf0678fb15269e819f6bef3e1f479241f",
-      "captured_at_utc": "2026-10-12T14:11:28.196Z",
+      "sha256": "b24284732e0ae8ac7261a3993568f86c1d809cdc75e6c24eb9560e2d481e6c3e",
+      "captured_at_utc": "2026-10-12T18:34:59.056Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -77,8 +77,8 @@
     },
     {
       "path": "docs/submission/assets/v2/hypothetical-edit-form.png",
-      "sha256": "1a093f5fa13df54bf8fd9f81674a78730c05b74d43f9c855345984bc9eff189e",
-      "captured_at_utc": "2026-10-12T14:11:31.049Z",
+      "sha256": "7276d825bf04bf0430af69492eed74bc5814bb8c824fdc4c5fe139d9cb9acf35",
+      "captured_at_utc": "2026-10-12T18:35:00.372Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -101,7 +101,7 @@
     {
       "path": "docs/submission/assets/v2/outputs-anatomy-hypothetical.png",
       "sha256": "9e6a95cd36796b367671b281b6b8ba0f04a7a0ebb09c8a2c581ce375edefd517",
-      "captured_at_utc": "2026-10-12T14:11:47.818Z",
+      "captured_at_utc": "2026-10-12T18:35:08.249Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -129,8 +129,8 @@
     },
     {
       "path": "docs/submission/assets/v2/explanation-CAD-hypothetical.png",
-      "sha256": "79e4279ac8eefacf4ac11f8ff3ae49c025cc2275e7ea4e9a1ec9fe7df0549327",
-      "captured_at_utc": "2026-10-12T14:11:51.210Z",
+      "sha256": "60e940c578d7e00a93d7189e9ad3c29f8f3ce648f0077bce919a136a8845e56b",
+      "captured_at_utc": "2026-10-12T18:35:08.587Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -158,8 +158,8 @@
     },
     {
       "path": "docs/submission/assets/v2/overview-hypothetical.png",
-      "sha256": "dca4007c063417260fc13e0bab99b72e6d153471962a690f49e3702eadce94ad",
-      "captured_at_utc": "2026-10-12T14:11:54.448Z",
+      "sha256": "c640d72327c8b98ab5b73da5cf66429a1e4e1c251223bf98520378b39aaba68e",
+      "captured_at_utc": "2026-10-12T18:35:09.926Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -187,8 +187,8 @@
     },
     {
       "path": "docs/submission/assets/v2/evidence-overview.png",
-      "sha256": "763be90caa92be56205dbe3f846a2f463eba6bad4eb6661799148b8635059f64",
-      "captured_at_utc": "2026-10-12T14:11:57.764Z",
+      "sha256": "f7416e5fae6afe402c5df029d8504193270d7323ee1c35148497558c245de7e3",
+      "captured_at_utc": "2026-10-12T18:35:12.111Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -200,8 +200,8 @@
     },
     {
       "path": "docs/submission/assets/v2/evidence-glance.png",
-      "sha256": "f71d19da2d3857d77a3efb21da3bb80d37d67d5032037deb87f48ae125d121e2",
-      "captured_at_utc": "2026-10-12T14:11:58.236Z",
+      "sha256": "84d03d683805afa2a09f576bb8791872203ace076d27e7879dda001015c13f59",
+      "captured_at_utc": "2026-10-12T18:35:12.330Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -213,8 +213,8 @@
     },
     {
       "path": "docs/submission/assets/v2/mobile-anatomy.png",
-      "sha256": "890bdfcc15d7f5d520221eef75e5385e69e110672d5aac8873364437185e77df",
-      "captured_at_utc": "2026-10-12T14:12:05.267Z",
+      "sha256": "c1ab46845c8f01dfe9bab9491ecd0ca689303a42bc8b4107a221dba9f29e2419",
+      "captured_at_utc": "2026-10-12T18:35:16.103Z",
       "viewport_css_pixels": [
         390,
         844
@@ -231,8 +231,8 @@
     },
     {
       "path": "docs/submission/assets/v2/report-stage-LAD-selected.png",
-      "sha256": "05a3ff5ab2e6809463e213913abf90ecbe56730add6bf3ff5d8c5fd18fcd512b",
-      "captured_at_utc": "2026-10-12T14:14:27.351Z",
+      "sha256": "7ec21e92e727b09ade814a88641f29d9bacaee8ec0b4047fe27bd8e9ee72de56",
+      "captured_at_utc": "2026-10-12T18:35:26.858Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -250,7 +250,7 @@
     {
       "path": "docs/submission/assets/v2/report-canvas-example.png",
       "sha256": "f79c8fa32d342dcd8bc196a8472f4a28ffaaf25ca3552c0a638362d6cd22f3cf",
-      "captured_at_utc": "2026-10-12T14:14:31.506Z",
+      "captured_at_utc": "2026-10-12T18:35:29.707Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -268,7 +268,7 @@
     {
       "path": "docs/submission/assets/v2/report-cards-example.png",
       "sha256": "995457dd6c339524213834b7206872046a403af4291aa4bbd73161e2e5be4831",
-      "captured_at_utc": "2026-10-12T14:14:32.991Z",
+      "captured_at_utc": "2026-10-12T18:35:30.188Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -286,7 +286,7 @@
     {
       "path": "docs/submission/assets/v2/report-canvas-hypothetical.png",
       "sha256": "4b61b98e7fa1a39b26c810613f8b51491c942024996d62460d3cccc72b14f3f1",
-      "captured_at_utc": "2026-10-12T14:14:38.963Z",
+      "captured_at_utc": "2026-10-12T18:35:34.338Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -299,12 +299,23 @@
         "LAD": "56.1% Stenotic",
         "LCX": "42.1% Normal",
         "RCA": "34.8% Normal"
-      }
+      },
+      "hypothetical_inputs_changed": {
+        "Typical Chest Pain": [
+          0,
+          1
+        ],
+        "Atypical": [
+          "Y",
+          "N"
+        ]
+      },
+      "label": "Hypothetical variation of the public development example; not a real patient, intervention or causal effect."
     },
     {
       "path": "docs/submission/assets/v2/report-cards-hypothetical.png",
-      "sha256": "797ea44b39da396717b7cda4b81903da9783c4973ad132525a1378eaa0edac3f",
-      "captured_at_utc": "2026-10-12T14:14:40.413Z",
+      "sha256": "de81894a78c36fe8387cae390d0cfa1075fdf476440cb30c6de052b052ace584",
+      "captured_at_utc": "2026-10-12T18:35:34.918Z",
       "viewport_css_pixels": [
         1440,
         1000
@@ -317,12 +328,23 @@
         "LAD": "56.1% Stenotic",
         "LCX": "42.1% Normal",
         "RCA": "34.8% Normal"
-      }
+      },
+      "hypothetical_inputs_changed": {
+        "Typical Chest Pain": [
+          0,
+          1
+        ],
+        "Atypical": [
+          "Y",
+          "N"
+        ]
+      },
+      "label": "Hypothetical variation of the public development example; not a real patient, intervention or causal effect."
     },
     {
       "path": "docs/submission/assets/v2/report-factors-CAD-example.png",
-      "sha256": "aedd2c85f12f0c2b0a1b34b068d0ea34bc4e0d16550e6bb336fed75dfeb79fba",
-      "captured_at_utc": "2026-10-12T14:14:46.994Z",
+      "sha256": "74f086e450bd5ebd7f06d922d1d95f14382ac51046a2a98e39b4a1f9c8c524a1",
+      "captured_at_utc": "2026-10-12T18:35:38.062Z",
       "viewport_css_pixels": [
         1180,
         900
@@ -359,5 +381,6 @@
       "captured_approx_utc": "2026-10-12T13:35Z",
       "state": "Pre-redesign V1 CAD explanation, public example; element capture @2x"
     }
-  ]
+  ],
+  "recaptured": "13 October 2026 after the secondary-text contrast fix (--soft #5f7073); same states and outputs."
 }

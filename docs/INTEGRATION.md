@@ -1,5 +1,7 @@
 # CardioScope Phase 5: frozen-model application integration
 
+> **Phase record.** Written when this phase finished. Statements such as "not done", "remaining work" or "blockers" describe that point in time. The [README](../README.md) describes the finished product.
+
 Completed on 1 October 2026. A complete profile now drives validated backend inference, all four numerical outputs, and matching whole-vessel colors in the real BodyParts3D viewer. This is implementation/verification documentation; no model or final-evaluation evidence was changed.
 
 ## Model loading and inference

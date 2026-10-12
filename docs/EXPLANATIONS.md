@@ -1,5 +1,7 @@
 # Phase 6: verified frozen-model explanations
 
+> **Phase record.** Written when this phase finished. Statements such as "not done", "remaining work" or "blockers" describe that point in time. The [README](../README.md) describes the finished product.
+
 CardioScope now explains one of CAD/LAD/LCX/RCA at a time for the exact complete profile and frozen prediction currently displayed. `POST /api/explain` returns all 55 source-feature contributions; React displays five upward/five downward factors and the remaining net contribution. CAD is selected initially and after a new prediction. Vessel target, numerical card and anatomy selection stay synchronized; selecting CAD clears vessel selection. This is implementation/verification evidence, not new model performance evidence or a final submission report.
 
 ## Methods and mathematical contract

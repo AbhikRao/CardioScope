@@ -1,5 +1,7 @@
 # Phase 7: evidence dashboard and product workflow
 
+> **Phase record.** Written when this phase finished. Statements such as "not done", "remaining work" or "blockers" describe that point in time. The [README](../README.md) describes the finished product.
+
 CardioScope now presents prediction, reference anatomy, positive-class explanations and frozen evaluation evidence in one application. This phase changes presentation and explanation identity verification only. Models, thresholds, splits, anatomy assets, SHAP computation/reference/configuration and evaluation artifacts remain unchanged.
 
 ## Evidence sources and boundary

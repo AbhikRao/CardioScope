@@ -30,3 +30,7 @@ htmlcov/
 coverage/
 *.tar
 *.tar.gz
+
+# Local-only material: private archives and agent/editor state
+*-private-archive/
+.claude/

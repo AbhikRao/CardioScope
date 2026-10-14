@@ -2,6 +2,8 @@
 
 **Coronary models, made visible.** Click an artery on a real 3D heart to see its frozen-model prediction, the factors that drove it, and the evidence for how far that model can be trusted.
 
+**[▶ Demo video](https://youtu.be/EIa7gBffbuU)** · **[Devpost](https://devpost.com/software/cardioscope-s25397)** · **[Six-page report (PDF)](output/pdf/CardioScope-Track-A-Report.pdf)** · **[Documentation](docs/README.md)**
+
 ![CardioScope: the public development example with LAD selected on the BodyParts3D heart; each artery is colored by its model-estimated probability](docs/images/report-stage-LAD-selected.png)
 
 CardioScope is an interactive research prototype for **Track A — Cardiovascular Risk Visualization & Prediction** (Multimodal AI Hackathon 2026). Four frozen classifiers take 55 structured clinical inputs from the public UCI Z-Alizadeh Sani dataset. They estimate **overall coronary artery disease (CAD)** and **stenosis in the LAD, LCX and RCA**. Each output is mapped onto verified BodyParts3D coronary anatomy and explained with SHAP. The models were frozen before a one-time evaluation on a prespecified holdout.

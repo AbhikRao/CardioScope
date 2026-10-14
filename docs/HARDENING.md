@@ -1,5 +1,7 @@
 # CardioScope v1 engineering hardening
 
+> **Phase record.** Written when this phase finished. Statements such as "not done", "remaining work" or "blockers" describe that point in time. The [README](../README.md) describes the finished product.
+
 Engineering validation performed on 3 October 2026. This phase preserves the completed scientific application and adds reproducibility, failure containment and operational safeguards. It does not train real-data models, decode reserved outcomes, execute the consumed final evaluation, or change thresholds, SHAP mathematics/background, source geometry or probability outputs.
 
 **Validation status: complete in the tested environments.** The scientific baseline is unchanged. [FINAL_VERIFICATION.json](hardening/FINAL_VERIFICATION.json) consolidates the final checks; untested environments and public-distribution decisions are listed below.
@@ -145,4 +147,4 @@ Scientific limitations remain those already reported: small same-source data, un
 
 ## Hosted CI status (12 October 2026)
 
-*Dated clarification, appended; the record above is preserved as written at the time.* The public push succeeded after the earlier OAuth `workflow`-scope rejection. **Hosted GitHub Actions passed** on 4 October 2026 (`ubuntu-24.04`) for `main` at `c35df12` ([run 37225107078](https://github.com/AbhikRao/CardioScope/actions/runs/37225107078)) and for the `v1.0.0` tag at `53cf720` ([run 37225107079](https://github.com/AbhikRao/CardioScope/actions/runs/37225107079)). Both ran the full `make install prepare lint test build` path (134 Python + 75 frontend tests), the frozen-model/SHAP smoke test, and the protected-file check (256 files byte-identical). The later design update (branch `design/judge-experience`, presentation only) has local verification only until it is pushed and its own hosted run passes; see [DESIGN_UPDATE.md](submission/DESIGN_UPDATE.md).
+*Dated clarification, appended; the record above is preserved as written at the time.* The public push succeeded after the earlier OAuth `workflow`-scope rejection. **Hosted GitHub Actions passed** on 4 October 2026 (`ubuntu-24.04`) for `main` at `c35df12` ([run 37225107078](https://github.com/AbhikRao/CardioScope/actions/runs/37225107078)) and for the `v1.0.0` tag at `53cf720` ([run 37225107079](https://github.com/AbhikRao/CardioScope/actions/runs/37225107079)). Both ran the full `make install prepare lint test build` path (134 Python + 75 frontend tests), the frozen-model/SHAP smoke test, and the protected-file check (256 files byte-identical). The later design update (branch `design/judge-experience`, presentation only) has local verification only until it is pushed and its own hosted run passes; see [INTERFACE.md](INTERFACE.md).

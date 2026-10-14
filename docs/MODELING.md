@@ -1,5 +1,7 @@
 # CardioScope Phase 3 — DEVELOPMENT ONLY
 
+> **Phase record.** Written when this phase finished. Statements such as "not done", "remaining work" or "blockers" describe that point in time. The [README](../README.md) describes the finished product.
+
 Completed 1 October 2026. These measurements use the **242 locked development records only**. The 61-record final holdout was not decoded, predicted, evaluated, or used for selection. No clinical generalization or calibrated-probability claim is made.
 
 ## Reproduce the comparison

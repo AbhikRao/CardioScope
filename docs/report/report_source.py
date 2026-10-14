@@ -1,14 +1,13 @@
 """Editable six-page Track A report. Rendering only; no inference/training imports.
 
 Run with a document environment containing reportlab and Pillow:
-    python docs/submission/report_source.py
+    python docs/report/report_source.py
 Numbers come from CLAIMS.json, copied from saved aggregate V1 evidence.
 """
 from pathlib import Path
 import hashlib
 import json
 from xml.sax.saxutils import escape
-from PIL import Image
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -17,25 +16,12 @@ from reportlab.platypus import Paragraph
 from reportlab.lib.utils import ImageReader
 
 ROOT = Path(__file__).resolve().parents[2]
-DIR = ROOT / 'docs/submission'
+DIR = ROOT / 'docs/report'
 CLAIMS = json.loads((DIR / 'CLAIMS.json').read_text())
 SOURCE = ROOT / CLAIMS['v1']['source']
 assert hashlib.sha256(SOURCE.read_bytes()).hexdigest() == CLAIMS['v1']['source_sha256']
-# Validate real capture provenance and exact integer crops; never alter screenshot content.
-PROVENANCE = json.loads((DIR / 'SCREENSHOT_PROVENANCE.json').read_text())
-for record in PROVENANCE['screenshots']:
-    assert hashlib.sha256((ROOT / record['path']).read_bytes()).hexdigest() == record['sha256']
-for record in PROVENANCE.get('derived_crops', []):
-    source = ROOT / record['source_path']
-    output = ROOT / record['path']
-    assert hashlib.sha256(source.read_bytes()).hexdigest() == record['source_sha256']
-    assert hashlib.sha256(output.read_bytes()).hexdigest() == record['sha256']
-    with Image.open(source) as original, Image.open(output) as crop:
-        expected = original.crop(record['crop_box_ltrb'])
-        assert crop.size == expected.size and crop.mode == expected.mode
-        assert crop.tobytes() == expected.tobytes()
 # Design-update captures (real production-build screenshots) are hash-checked the same way.
-V2 = json.loads((DIR / 'assets/v2/provenance.json').read_text())
+V2 = json.loads((ROOT / 'docs/images/provenance.json').read_text())
 V2_HASHES = {r['path']: r['sha256'] for r in V2['records']}
 OUT = ROOT / 'output/pdf/CardioScope-Track-A-Report.pdf'
 OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -92,21 +78,8 @@ def heading(text, y):
     return y-24
 
 
-def image(name, y, height=None):
-    reader = ImageReader(str(DIR / 'assets' / name))
-    iw, ih = reader.getSize()
-    height = height or CW*ih/iw
-    width = height*iw/ih
-    assert width <= CW+0.01
-    x = M+(CW-width)/2
-    C.setStrokeColor(colors.HexColor('#D5E3E7'))
-    C.roundRect(x-1, y-height-1, width+2, height+2, 3, fill=0, stroke=1)
-    C.drawImage(reader, x, y-height, width, height, mask='auto')
-    return y-height
-
-
-def v2image(name, x, y, width=None, height=None):
-    path = f'docs/submission/assets/v2/{name}.png'
+def screenshot(name, x, y, width=None, height=None):
+    path = f'docs/images/{name}.png'
     assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == V2_HASHES[path], path
     reader = ImageReader(str(ROOT / path))
     iw, ih = reader.getSize()
@@ -170,7 +143,7 @@ y=H-148
 y=para('A probability table is hard to read spatially. In CardioScope a user clicks an artery on the heart; its card, color and explanation follow, and every number links back to the once-only holdout evidence.', y, size=10.5)
 y=metric_tiles(y-10)
 y=para('Prespecified 61-record same-source holdout, evaluated once after freezing. CAD/LAD are strong; LCX/RCA rank moderately but miss most positives at the fixed 0.5 threshold.', y-6, size=8.3, color=MUTED)
-y=v2image('report-stage-LAD-selected', M, y-10, width=CW)
+y=screenshot('report-stage-LAD-selected', M, y-10, width=CW)
 y=para('<b>Real production-build capture.</b> Public development example; LAD selected by click, so the other vessels fade. Each whole artery is colored by its own model-estimated probability (gold = 0.5). Reference anatomy, not this person\'s heart.', y-7, size=8.3, color=MUTED)
 callout('<b>Educational / research decision-support prototype.</b> Not a diagnostic replacement or validated clinical risk. Source: <link href="https://github.com/AbhikRao/CardioScope" color="#007F83">github.com/AbhikRao/CardioScope</link>', y-10, height=50)
 C.showPage()
@@ -246,8 +219,8 @@ y=H-150
 half=(CW-12)/2
 C.setFillColor(INK); C.setFont('Helvetica-Bold', 9)
 C.drawString(M, y, 'Public development example'); C.drawString(M+half+12, y, 'Hypothetical edit: Typical Chest Pain 0 -> 1, Atypical Y -> N')
-v2image('report-canvas-example', M, y-6, width=half)
-y=v2image('report-canvas-hypothetical', M+half+12, y-6, width=half)
+screenshot('report-canvas-example', M, y-6, width=half)
+y=screenshot('report-canvas-hypothetical', M+half+12, y-6, width=half)
 cards={r['path'].split('/')[-1]: r['outputs'] for r in V2['records'] if 'report-cards' in r['path']}
 assert cards['report-cards-example.png'] == {'CAD':'17.1% Normal','LAD':'24.3% Normal','LCX':'37.1% Normal','RCA':'30.9% Normal'}
 assert cards['report-cards-hypothetical.png'] == {'CAD':'64.5% CAD','LAD':'56.1% Stenotic','LCX':'42.1% Normal','RCA':'34.8% Normal'}
@@ -261,8 +234,8 @@ for j,row in enumerate(rows):
     for x,cell in zip(cols,row): C.drawString(x+6, y-11, cell)
     y-=16
 top=y-8
-v2image('report-cards-example', M, top, width=half)
-y=v2image('report-cards-hypothetical', M+half+12, top, width=half)
+screenshot('report-cards-example', M, top, width=half)
+y=screenshot('report-cards-hypothetical', M+half+12, top, width=half)
 y=para('Real output cards from the running application (same states as above): class pills flip for CAD and LAD; the hypothetical card keeps the unedited value for comparison. The edit is labeled in the UI and is not a real patient, intervention or causal effect. LCX/RCA barely respond, consistent with their weak holdout sensitivity.', y-6, size=8.3, color=MUTED)
 y=heading('83 verified mesh leaves, one coordinate system', y-12)
 y=para('<b>Heart base 30 / LAD 18 / LCX 6 / RCA 29</b>, one shared source coordinate system and assembly transform; coronary leaves are excluded from the heart base. Selection works both ways (mesh to card, card to mesh) and also switches the explanation target. Presets animate the camera only; isolate, orbit and zoom support inspection.', y, size=9.3)
@@ -274,7 +247,7 @@ C.showPage()
 title(5,'Explainability','Why the model produced this output',
       'Signed SHAP factors link each entered value to the selected target. Every explanation is checked against the actual frozen output before it is shown.')
 y=H-148
-y=v2image('report-factors-CAD-example', M, y, width=CW)
+y=screenshot('report-factors-CAD-example', M, y, width=CW)
 y=para('<b>Real capture, public example, CAD 17.1%:</b> the five largest factors in each direction, in model log-odds. Readable names expand documented source abbreviations (code shown beneath); entered values are unchanged. Typical Chest Pain (entered 0) is the largest single factor; after the hypothetical edit on page 4 it becomes +0.914.', y-7, size=8.4, color=MUTED)
 glossary=[('FH','Family history'),('DLP','Dyslipidemia'),('HTN','Hypertension'),('DM','Diabetes mellitus'),('CRF','Chronic renal failure'),('CVA','Cerebrovascular accident'),('ESR','Erythrocyte sedimentation rate'),('BUN','Blood urea nitrogen'),('EF-TTE','Ejection fraction'),('Region RWMA','Region with regional wall motion abnormality'),('LowTH Ang','Low-threshold angina'),('VHD','Valvular heart disease')]
 y=heading('Readable names for source codes (display only)',y-12)

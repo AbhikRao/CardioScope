@@ -1,5 +1,7 @@
 # CardioScope final holdout evaluation
 
+> **Phase record.** Written when this phase finished. Statements such as "not done", "remaining work" or "blockers" describe that point in time. The [README](../README.md) describes the finished product.
+
 The **single final evaluation** completed on 1 October 2026. Every frozen pipeline made exactly one batch probability call on all 61 locked holdout records. No real model fitting, reselection, preprocessing change, threshold tuning or calibration occurred. This document records the evaluation protocol and its preserved results, not a submission report.
 
 ## Frozen inputs and scope

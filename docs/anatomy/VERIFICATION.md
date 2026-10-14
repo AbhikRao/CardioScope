@@ -1,5 +1,7 @@
 # Phase 2: real anatomy viewer verification
 
+> **Phase record.** Written when this phase finished. Statements such as "not done", "remaining work" or "blockers" describe that point in time. The [README](../../README.md) describes the finished product.
+
 Engineering verification on **1 October 2026**, using the production frontend served by the existing local FastAPI app at `http://127.0.0.1:8000/`. No models were trained or evaluated.
 
 ## Source assembly and orientation

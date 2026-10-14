@@ -2,7 +2,7 @@
 
 # CardioScope foundation
 
-`PLAN.md` defines the architecture and engineering rules. `README.md` retains the hackathon reference material. This document describes setup and verification for the implemented application; it does not replace that plan. See [MODELING.md](MODELING.md) for the historical Phase 3 development-only comparison, [FINAL_EVALUATION.md](FINAL_EVALUATION.md) for the completed single final holdout evaluation, and [INTEGRATION.md](INTEGRATION.md) for the frozen-model/form/anatomy workflow and [EXPLANATIONS.md](EXPLANATIONS.md) for Phase 6 verified positive-class explanations.
+*Engineering record from the first build phase; the [README](../README.md) describes the finished product.* This document describes setup and verification for the implemented application; it does not replace that plan. See [MODELING.md](MODELING.md) for the historical Phase 3 development-only comparison, [FINAL_EVALUATION.md](FINAL_EVALUATION.md) for the completed single final holdout evaluation, and [INTEGRATION.md](INTEGRATION.md) for the frozen-model/form/anatomy workflow and [EXPLANATIONS.md](EXPLANATIONS.md) for Phase 6 verified positive-class explanations.
 
 ## Prerequisites and locked installation
 
@@ -34,7 +34,7 @@ The commands below describe initial Phase 1 acquisition. The sources are already
 
 For the finished v1 product, `make prepare` verifies the committed snapshot; it does not call these historical acquisition commands.
 
-Dataset acquisition checks the ZIP against the SHA-256 from `PLAN.md`, extracts only the exact workbook, and stores source URL, license, DOI, UTC acquisition time, ZIP hash, and workbook hash under `data/raw/uci-411/`. Cached downloads are verified. A changed source checksum fails; it is not accepted as an automatic update.
+Dataset acquisition checks the ZIP against the SHA-256 in `config/dataset.json`, extracts only the exact workbook, and stores source URL, license, DOI, UTC acquisition time, ZIP hash, and workbook hash under `data/raw/uci-411/`. Cached downloads are verified. A changed source checksum fails; it is not accepted as an automatic update.
 
 The anatomy pipeline retrieves the current archive's mapping tables/license and locks their hashes. It uses HTTP ZIP byte ranges to fetch only the selected meshes, checks archive snapshot headers on each range, and validates ZIP CRCs, OBJ coordinates, faces, and bounds. The snapshot is locked before the first mesh, and per-mesh checksum records survive an interrupted run. A partial download can be resumed against the same pinned source version.
 

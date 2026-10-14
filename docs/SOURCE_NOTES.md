@@ -1,10 +1,12 @@
 # Verified source notes and phase-one corrections
 
+> **Phase record.** Written when this phase finished. Statements such as "not done", "remaining work" or "blockers" describe that point in time. The [README](../README.md) describes the finished product.
+
 These findings come from the downloaded pinned UCI workbook and current BodyParts3D mapping/mesh files. They do not change the chosen track or architecture.
 
 ## UCI labels and source values
 
-The checksum in `PLAN.md` matches the acquired archive. It contains 303 records, 55 candidate predictors, and four target columns, with the class counts recorded in the plan. The workbook has zero empty cells and zero exact duplicate rows; the deeper audit also found zero identical-predictor duplicate groups.
+The checksum recorded in `config/dataset.json` matches the acquired archive. It contains 303 records, 55 candidate predictors, and four target columns, with the class counts recorded in the plan. The workbook has zero empty cells and zero exact duplicate rows; the deeper audit also found zero identical-predictor duplicate groups.
 
 One source row contradicts the rule that overall CAD always equals the union of the three vessel labels:
 
